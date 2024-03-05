@@ -3,13 +3,12 @@
 import { ButtonLoading } from '@/components/button-loading';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { signIn } from '@/modules/auth/actions/sign-in';
 
 import Link from 'next/link';
 
 export const FormSignIn = () => {
   return (
-    <form className="space-y-4 " action={signIn}>
+    <form className="space-y-4 ">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input

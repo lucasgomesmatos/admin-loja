@@ -1,4 +1,3 @@
-import { FormSignIn } from '@/components/form-sign-in';
 import {
   Card,
   CardContent,
@@ -9,6 +8,7 @@ import {
 import { Library } from 'lucide-react';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
+import { FormSignIn } from '../components/form-sign-in';
 
 const ErrorToast = dynamic(() => import('@/components/error-toast'), {
   ssr: false,
@@ -21,7 +21,6 @@ export const metadata: Metadata = {
 export default function SignIn() {
   return (
     <main className="flex h-screen justify-center items-center px-5">
-      <ErrorToast />
       <Card className="mx-auto max-w-sm space-y-6 ">
         <CardHeader className="space-y-2 text-center flex flex-col items-center">
           <CardTitle className=" font-bold text-xl flex gap-2 items-center">
