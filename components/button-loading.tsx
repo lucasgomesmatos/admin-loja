@@ -1,19 +1,33 @@
 'use client';
 
+import { cn } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
+import { ComponentProps, ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Button } from './ui/button';
 
-export const ButtonLoading = () => {
+interface ButtonLoadingProps extends ComponentProps<'button'> {
+  children: string | ReactNode;
+}
+
+const ComponentLoader = () => (
+  <Loader2 className="animate-spin h-5 w-5 text-white" />
+);
+
+export const ButtonLoading = ({ children, ...props }: ButtonLoadingProps) => {
   const { pending } = useFormStatus();
+
+  const element = pending ? <ComponentLoader /> : children;
 
   return (
     <Button
-      className="w-full"
+      className={cn('w-full', props.className)}
       type="submit"
       aria-disabled={pending}
       disabled={pending}
+      {...props}
     >
-      {pending ? 'Entrando...' : 'Entrar'}
+      {element}
     </Button>
   );
 };

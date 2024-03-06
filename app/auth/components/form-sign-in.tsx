@@ -1,6 +1,6 @@
 'use client';
 
-import { signInUser } from '@/app/actions/auth/sign-in';
+import { signInUserAction } from '@/app/actions/auth/sign-in';
 import { ButtonLoading } from '@/components/button-loading';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,7 +19,7 @@ const initialState = {
 };
 
 export const FormSignIn = () => {
-  const [state, action] = useFormState(signInUser, initialState);
+  const [state, action] = useFormState(signInUserAction, initialState);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
 
   const { replace } = useRouter();
@@ -73,7 +73,7 @@ export const FormSignIn = () => {
           </div>
         </div>
 
-        <ButtonLoading />
+        <ButtonLoading>Entrar</ButtonLoading>
         <Link
           className="inline-block w-full text-center text-sm underline"
           href="#"

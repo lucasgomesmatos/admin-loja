@@ -4,7 +4,7 @@ import { AUTH_SIGN_IN } from '@/utils/functions/api';
 import { apiError } from '@/utils/functions/api-error';
 import { cookies } from 'next/headers';
 
-export async function signInUser(state: {}, formData: FormData) {
+export async function signInUserAction(state: {}, formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
