@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { Toaster } from 'react-hot-toast';
 
+import { Toaster } from '@/components/ui/sonner';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html className={inter.variable} lang="pt-BR">
       <body className=" antialiased">
-        <Toaster position="top-center" reverseOrder={false} />
+        <Toaster position="top-center" richColors />
         {children}
       </body>
     </html>

@@ -1,5 +1,3 @@
-'use client';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -10,9 +8,31 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { LogOut, Search } from 'lucide-react';
+import { GET_PROFILE } from '@/utils/functions/api';
 
-export default function Component() {
+import { Building, ChevronDown, LogOut, Search } from 'lucide-react';
+
+interface UserProps {
+  id: string;
+  name: string;
+  email: string;
+  cpf: string;
+}
+
+async function fetchProfile(): Promise<UserProps> {
+  const params = GET_PROFILE();
+  const response = await fetch(params.url, {
+    credentials: 'include',
+    ...params,
+  });
+
+  const profile = await response.json();
+
+  return profile;
+}
+
+export default async function Home() {
+  const user = await fetchProfile();
   return (
     <>
       <div className="flex flex-col">
@@ -32,36 +52,35 @@ export default function Component() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                className="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
-                id="menu"
-                size="icon"
-                variant="ghost"
+                variant="outline"
+                className="flex select-none items-center gap-2"
               >
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
+                <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 mr-8">
-              <DropdownMenuLabel id="menu">Minha conta</DropdownMenuLabel>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel className="flex flex-col">
+                <span>{user.name}</span>
+                <span className="text-xs font-normal text-muted-foreground">
+                  {user.email}
+                </span>
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
-
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Button
-                  variant="outline"
-                  className="flex items-center gap-2 cursor-pointer w-full justify-start "
-                >
-                  <LogOut className="size-5" />
-                  Sair
-                </Button>
+              <DropdownMenuItem className="cursor-pointer">
+                <Building className="mr-2 h-4 w-4" />
+                <span>Perfil da loja</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer text-rose-500 dark:text-rose-400">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Sair</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-          oi
+          <h1 className="font-bold text-gray-800 text-base">
+            Bem vindo, {user.name} ! 👋
+          </h1>
         </main>
       </div>
     </>

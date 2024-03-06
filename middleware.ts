@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const publicRoutes = ['/auth/sign-in'];
 
 export function middleware(request: NextRequest) {
-  const currentUser = request.cookies.get('session')?.value;
+  const currentUser = request.cookies.get('token')?.value;
 
   if (currentUser && !request.nextUrl.pathname.startsWith('/dashboard')) {
     return Response.redirect(new URL('/dashboard/home', request.url));

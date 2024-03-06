@@ -1,19 +1,18 @@
-import { cookies } from 'next/headers';
 import { environment } from './env';
 
 export function api(path: string, init?: RequestInit) {
-  const cookieStore = cookies();
-  const token = cookieStore.get('session')?.value;
+  const API_URL = environment.NEXT_PUBLIC_API_BASE_URL;
 
-  const baseUrl = environment.NEXT_PUBLIC_API_BASE_URL;
   const apiPrefix = '/';
-  const url = new URL(apiPrefix.concat(path), baseUrl);
+  const url = new URL(apiPrefix.concat(path), API_URL);
 
   return fetch(url, {
     ...init,
+    credentials: 'include',
     headers: {
       ...init?.headers,
-      Authorization: `Bearer ${token}`,
+
+      'Content-Type': 'application/json',
     },
   });
 }

@@ -7,12 +7,7 @@ import {
 } from '@/components/ui/card';
 import { Library } from 'lucide-react';
 import { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import { FormSignIn } from '../components/form-sign-in';
-
-const ErrorToast = dynamic(() => import('@/components/error-toast'), {
-  ssr: false,
-});
 
 export const metadata: Metadata = {
   title: 'Login',
