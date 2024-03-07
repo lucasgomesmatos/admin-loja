@@ -1,28 +1,23 @@
 'use client';
 
 import { formatBytes } from '@/utils/functions/format-bytes';
+import { productStore } from '@/utils/providers/product-store';
 import { FileIcon, Trash2, UploadCloud } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export default function DropzoneInput() {
-  const [files, setFiles] = useState<File[]>([]);
+  const { files, addFiles, removeFile } = productStore();
 
-  const onRemoveFile = (file: File) => {
-    const newFiles = files?.filter((f) => f.name !== file.name);
-    setFiles(newFiles);
-  };
+  const { control, setValue } = useFormContext();
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      if (files) {
-        setFiles([...files, ...acceptedFiles]);
-        return;
-      }
-
-      setFiles(acceptedFiles);
+      addFiles(acceptedFiles);
+      setValue('files', acceptedFiles);
     },
-    [files],
+    [addFiles, setValue],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -39,22 +34,25 @@ export default function DropzoneInput() {
         className=" rounded-lg border-dashed border-2 border-gray-400 p-4
     hover:border-gray-600 bg-gray-50  transition-all duration-300 ease-in-out"
       >
-        <div
-          {...getRootProps({ className: 'dropzone' })}
-          className="cursor-pointer"
-        >
-          <input {...getInputProps()} />
-          <div className="flex flex-col justify-center items-center">
-            <p className="text-sm text-gray-400">
-              <span className="font-bold mr-1">Clique para enviar</span>
-              ou arraste e solte arquivos aqui
-            </p>
-            <p className="text-gray-400 text-sm flex items-center justify-center gap-2">
-              <FileIcon className="size-4" />
-              PDF
-            </p>
-          </div>
-        </div>
+        <Controller
+          render={({ field: { onChange, name, value } }) => (
+            <div {...getRootProps()} className="cursor-pointer">
+              <input {...getInputProps({ onChange })} />
+              <div className="flex flex-col justify-center items-center">
+                <p className="text-sm text-gray-400">
+                  <span className="font-bold mr-1">Clique para enviar</span>
+                  ou arraste e solte arquivos aqui
+                </p>
+                <p className="text-gray-400 text-sm flex items-center justify-center gap-2">
+                  <FileIcon className="size-4" />
+                  PDF
+                </p>
+              </div>
+            </div>
+          )}
+          name="files"
+          control={control}
+        />
       </section>
       {Boolean(files.length) && (
         <div className="mt-4">
@@ -79,7 +77,7 @@ export default function DropzoneInput() {
                   </div>
                 </div>
                 <button
-                  onClick={() => onRemoveFile(file)}
+                  onClick={() => removeFile(file)}
                   type="button"
                   className="ml-auto rounded-md p-2 hover:bg-zinc-50"
                 >

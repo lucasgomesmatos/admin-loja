@@ -10,7 +10,6 @@ import {
   ScanBarcode,
   Users,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { NavLink } from './nav-link';
 import { Button } from './ui/button';
 import {
@@ -28,8 +27,6 @@ interface SideBarProps {
 }
 
 export const SideBar = ({ name, email }: SideBarProps) => {
-  const { replace } = useRouter();
-
   const handleLogout = () => {
     logoutUser();
   };

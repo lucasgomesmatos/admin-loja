@@ -8,23 +8,30 @@ import { Button } from './ui/button';
 
 interface ButtonLoadingProps extends ComponentProps<'button'> {
   children: string | ReactNode;
+  isLoading?: boolean;
 }
 
 const ComponentLoader = () => (
   <Loader2 className="animate-spin h-5 w-5 text-white" />
 );
 
-export const ButtonLoading = ({ children, ...props }: ButtonLoadingProps) => {
+export const ButtonLoading = ({
+  children,
+  isLoading,
+  ...props
+}: ButtonLoadingProps) => {
   const { pending } = useFormStatus();
 
-  const element = pending ? <ComponentLoader /> : children;
+  const loading = isLoading || pending;
+
+  const element = loading ? <ComponentLoader /> : children;
 
   return (
     <Button
       className={cn('w-full', props.className)}
       type="submit"
-      aria-disabled={pending}
-      disabled={pending}
+      aria-disabled={loading}
+      disabled={loading}
       {...props}
     >
       {element}
