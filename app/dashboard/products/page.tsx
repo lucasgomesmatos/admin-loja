@@ -42,16 +42,19 @@ export default async function ProductPage() {
               </CardContent>
               <CardFooter className="space-x-4">
                 <Button
+                  title="Editar Produto"
                   variant="outline"
                   className="bg-emerald-400 hover:bg-emerald-500"
                 >
                   <EditIcon className="size-4 text-emerald-950" />
                 </Button>
-                <Button variant="destructive">
+                <Button variant="destructive" title="Apagar Produto">
                   <Trash className="size-4" />
                 </Button>
-                <Link href={`/dashboard/products/${product.id}`}>
-                  <Button>
+                <Link
+                  href={`/dashboard/products/${product.id}?name=${product.name}`}
+                >
+                  <Button title="Arquivos">
                     <Files className="size-4" />
                   </Button>
                 </Link>

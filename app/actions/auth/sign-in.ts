@@ -1,6 +1,6 @@
 'use server';
 
-import { AUTH_SIGN_IN } from '@/utils/functions/api';
+import { environment } from '@/lib/env';
 import { apiError } from '@/utils/functions/api-error';
 import { cookies } from 'next/headers';
 
@@ -9,11 +9,18 @@ export async function signInUserAction(state: {}, formData: FormData) {
   const password = formData.get('password') as string;
 
   try {
-    const request = AUTH_SIGN_IN({ email, password });
+    const response = await fetch(
+      `${environment.NEXT_PUBLIC_API_BASE_URL}/sessions`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      },
+    );
 
-    const response = await fetch(request.url, {
-      ...request,
-    });
+    console.log(response);
 
     if (!response.ok) {
       throw new Error('Email ou senha inválidas');

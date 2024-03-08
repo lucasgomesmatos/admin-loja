@@ -12,9 +12,9 @@ export async function fetchProducts(
   query = '',
 ): Promise<ProductsResponse[]> {
   const response = await api(`products?page=${page}&query=${query}`, {
+    cache: 'no-cache',
     next: {
-      revalidate: 60 * 60,
-      tags: ['get-all-products'],
+      tags: ['products'],
     },
   });
 

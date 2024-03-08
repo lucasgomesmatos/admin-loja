@@ -1,5 +1,4 @@
-import { GET_PROFILE } from '@/utils/functions/api';
-
+import { api } from '@/lib/fecth';
 import { Search } from 'lucide-react';
 import { Input } from './ui/input';
 
@@ -11,12 +10,7 @@ interface UserProps {
 }
 
 async function fetchProfile(): Promise<UserProps> {
-  const params = GET_PROFILE();
-  const response = await fetch(params.url, {
-    credentials: 'include',
-    ...params,
-  });
-
+  const response = await api('me');
   const profile = await response.json();
 
   return profile;

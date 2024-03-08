@@ -1,15 +1,13 @@
-'use client';
-
-import { logoutUser } from '@/app/actions/auth/logout';
+import { api } from '@/lib/fecth';
 import {
   Building,
   ChevronDown,
   Home,
   Library,
-  LogOut,
   ScanBarcode,
   Users,
 } from 'lucide-react';
+import { ButtonLogout } from './button-logout';
 import { NavLink } from './nav-link';
 import { Button } from './ui/button';
 import {
@@ -26,10 +24,22 @@ interface SideBarProps {
   email: string;
 }
 
-export const SideBar = ({ name, email }: SideBarProps) => {
-  const handleLogout = () => {
-    logoutUser();
-  };
+interface UserProps {
+  id: string;
+  name: string;
+  email: string;
+  cpf: string;
+}
+
+async function fetchProfile(): Promise<UserProps> {
+  const response = await api('me');
+  const profile = await response.json();
+
+  return profile;
+}
+
+export async function SideBar() {
+  const { name, email } = await fetchProfile();
 
   return (
     <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
@@ -58,13 +68,7 @@ export const SideBar = ({ name, email }: SideBarProps) => {
                 <Building className="mr-2 h-4 w-4" />
                 <span>Perfil da loja</span>
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={handleLogout}
-                className="cursor-pointer text-rose-500 dark:text-rose-400"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Sair</span>
-              </DropdownMenuItem>
+              <ButtonLogout />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -88,4 +92,4 @@ export const SideBar = ({ name, email }: SideBarProps) => {
       </div>
     </div>
   );
-};
+}
