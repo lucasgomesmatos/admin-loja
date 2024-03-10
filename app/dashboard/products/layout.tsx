@@ -1,7 +1,13 @@
+import { ProductContextProvider } from './context/product-context';
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <section>{children}</section>;
+  return (
+    <section>
+      <ProductContextProvider>{children}</ProductContextProvider>
+    </section>
+  );
 }

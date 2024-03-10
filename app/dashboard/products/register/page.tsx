@@ -1,8 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { FormRegisterProduct } from '../components/form-register-product';
 
+import dynamic from 'next/dynamic';
+const FormRegisterProduct = dynamic(
+  () => import('@/app/dashboard/products/components/form-register-product'),
+  { ssr: false },
+);
 export default function page() {
   return (
     <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-6 ">

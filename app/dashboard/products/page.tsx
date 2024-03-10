@@ -8,8 +8,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { EditIcon, Files, LibraryBig, Plus, Trash } from 'lucide-react';
+import { EditIcon, Files, LibraryBig, Plus } from 'lucide-react';
 import Link from 'next/link';
+import { DeleteButtonProduct } from './components/delete-button-product';
+
+import dynamic from 'next/dynamic';
+
+const DialogDeleteProduct = dynamic(
+  () => import('./components/dialog-delete-product'),
+  { ssr: false },
+);
 
 export default async function ProductPage() {
   const products = await fetchProducts();
@@ -26,11 +34,11 @@ export default async function ProductPage() {
             </Button>
           </Link>
         </div>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2">
           {products.map((product) => (
             <Card key={product.id}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-base font-semibold">
+                <CardTitle className="text-sm text-ellipsis font-semibold">
                   {product.name}
                 </CardTitle>
                 <LibraryBig className="size-5 text-muted-foreground" />
@@ -48,9 +56,7 @@ export default async function ProductPage() {
                 >
                   <EditIcon className="size-4 text-emerald-950" />
                 </Button>
-                <Button variant="destructive" title="Apagar Produto">
-                  <Trash className="size-4" />
-                </Button>
+                <DeleteButtonProduct productId={product.id} />
                 <Link
                   href={`/dashboard/products/${product.id}?name=${product.name}`}
                 >
@@ -62,6 +68,7 @@ export default async function ProductPage() {
             </Card>
           ))}
         </div>
+        <DialogDeleteProduct />
       </main>
     </>
   );

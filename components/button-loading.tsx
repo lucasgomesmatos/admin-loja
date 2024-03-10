@@ -28,7 +28,7 @@ export const ButtonLoading = ({
 
   return (
     <Button
-      className={cn('w-full', props.className)}
+      className={cn('w-full disabled:cursor-not-allowed', props.className)}
       type="submit"
       aria-disabled={loading}
       disabled={loading}
