@@ -49,13 +49,17 @@ export default async function ProductPage() {
                 </span>
               </CardContent>
               <CardFooter className="space-x-4">
-                <Button
-                  title="Editar Produto"
-                  variant="outline"
-                  className="bg-emerald-400 hover:bg-emerald-500"
+                <Link
+                  href={`/dashboard/products/update/${product.id}?name=${product.name}&idWoocommerce=${product.idWoocommerce}`}
                 >
-                  <EditIcon className="size-4 text-emerald-950" />
-                </Button>
+                  <Button
+                    title="Editar Produto"
+                    variant="outline"
+                    className="bg-emerald-400 hover:bg-emerald-500"
+                  >
+                    <EditIcon className="size-4 text-emerald-950" />
+                  </Button>
+                </Link>
                 <DeleteButtonProduct productId={product.id} />
                 <Link
                   href={`/dashboard/products/${product.id}?name=${product.name}`}

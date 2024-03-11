@@ -1,23 +1,27 @@
 'use client';
 
-import { useProductContext } from '@/app/dashboard/products/context/product-context';
+import { useProductStore } from '@/app/dashboard/products/store/store';
 import { formatBytes } from '@/utils/functions/format-bytes';
-import { FileIcon, Trash2, UploadCloud } from 'lucide-react';
+import { FileIcon, LinkIcon, Trash2, UploadCloud } from 'lucide-react';
+import Link from 'next/link';
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { Button } from './ui/button';
 
 export default function DropzoneInput() {
   const {
-    addFiles,
-    removeFile,
-    product: { files },
-  } = useProductContext();
+    addProductFilesAction,
+    removeProductFileAction,
+    productFiles,
+    currentProductFiles,
+    removeProductCurrentFileAction,
+  } = useProductStore();
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      addFiles(acceptedFiles);
+      addProductFilesAction(acceptedFiles);
     },
-    [addFiles],
+    [addProductFilesAction],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -48,16 +52,64 @@ export default function DropzoneInput() {
           </div>
         </div>
       </section>
-      {Boolean(files.length) && (
+
+      {Boolean(currentProductFiles?.length) && (
         <div className="mt-4">
-          <h2>Arquivos:</h2>
+          <h2 className="text-sm font-bold">
+            {currentProductFiles.length === 1
+              ? 'Arquivo atual:'
+              : 'Arquivos atuais:'}
+          </h2>
           <div className="mt-2 flex flex-col gap-3 w-full ">
-            {files?.map((file) => (
+            {currentProductFiles?.map((file) => (
               <div
-                className="flex group items-start gap-4 rounded-lg border border-zinc-200 p-4"
+                className="flex group items-start gap-4 rounded-lg border border-zinc-200 p-4 "
                 key={file.name}
               >
-                <div className="rounded-full border-4 border-purple-100 bg-purple-200 p-2 text-purple-600">
+                <div className="rounded-full border-4  p-2 ">
+                  <UploadCloud className="w-4 h-4" />
+                </div>
+                <div className="flex flex-1 flex-col items-start gap-1">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-zinc-700 text-ellipsis">
+                      {file.name}
+                    </span>
+                  </div>
+                </div>
+                <Button
+                  variant="destructive"
+                  onClick={() => removeProductCurrentFileAction(file)}
+                  type="button"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+
+                <div>
+                  <Link href={file.url}>
+                    <Button variant="secondary">
+                      <LinkIcon className="size-4 text-emerald-950" />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {Boolean(productFiles.length) && (
+        <div className="mt-4">
+          <h2 className="text-sm font-bold">
+            {productFiles.length === 1
+              ? 'Arquivo a enviar:'
+              : 'Arquivos a enviar:'}
+          </h2>
+          <div className="mt-2 flex flex-col gap-3 w-full ">
+            {productFiles?.map((file) => (
+              <div
+                className="flex group items-start gap-4 rounded-lg border border-zinc-200 p-4 "
+                key={file.name}
+              >
+                <div className="rounded-full border-4  p-2 ">
                   <UploadCloud className="w-4 h-4" />
                 </div>
                 <div className="flex flex-1 flex-col items-start gap-1">
@@ -65,18 +117,19 @@ export default function DropzoneInput() {
                     <span className="text-sm font-medium text-zinc-700">
                       {file.name}
                     </span>
-                    <span className="text-sm font-medium text-zinc-500">
+                    <span className="text-xs font-medium text-zinc-500">
                       {formatBytes(file.size)}
                     </span>
                   </div>
                 </div>
-                <button
-                  onClick={() => removeFile(file.name)}
+
+                <Button
+                  variant="destructive"
+                  onClick={() => removeProductFileAction(file.name)}
                   type="button"
-                  className="ml-auto rounded-md p-2 hover:bg-zinc-50"
                 >
-                  <Trash2 className="h-5 w-5 text-zinc-500" />
-                </button>
+                  <Trash2 className="size-4" />
+                </Button>
               </div>
             ))}
           </div>

@@ -13,14 +13,12 @@ import {
 import { useEffect } from 'react';
 import { useFormState } from 'react-dom';
 import { toast } from 'sonner';
-import { useProductContext } from '../context/product-context';
+import { useProductStore } from '../store/store';
 import { initialStateCreateProduct } from '../utils/products-utils';
 
 export default function DialogDeleteProduct() {
-  const {
-    openDialogDeleteProduct,
-    product: { dialogDeleteProductOpen },
-  } = useProductContext();
+  const { openDialogDeleteProductAction, dialogDeleteProductOpen } =
+    useProductStore();
 
   const [state, action] = useFormState(
     () => fetchDeleteProduct(dialogDeleteProductOpen.productId),
@@ -34,9 +32,9 @@ export default function DialogDeleteProduct() {
 
     if (state.ok && dialogDeleteProductOpen.productId) {
       toast.success(`Produto excluído com sucesso.`);
-      openDialogDeleteProduct(null);
+      openDialogDeleteProductAction(null);
     }
-  }, [state, openDialogDeleteProduct, dialogDeleteProductOpen.productId]);
+  }, [state, openDialogDeleteProductAction, dialogDeleteProductOpen.productId]);
 
   if (!dialogDeleteProductOpen.open) return null;
 
@@ -44,7 +42,7 @@ export default function DialogDeleteProduct() {
     <>
       <Dialog
         open={dialogDeleteProductOpen.open}
-        onOpenChange={() => openDialogDeleteProduct(null)}
+        onOpenChange={() => openDialogDeleteProductAction(null)}
       >
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>

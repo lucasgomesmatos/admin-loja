@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
-import { useProductContext } from '../context/product-context';
+import { useProductStore } from '../store/store';
 
 interface DeleteButtonProductProps {
   productId: string;
@@ -10,13 +10,13 @@ interface DeleteButtonProductProps {
 export const DeleteButtonProduct = ({
   productId,
 }: DeleteButtonProductProps) => {
-  const { openDialogDeleteProduct } = useProductContext();
+  const { openDialogDeleteProductAction } = useProductStore();
 
   return (
     <Button
       variant="destructive"
       title="Apagar Produto"
-      onClick={() => openDialogDeleteProduct(productId)}
+      onClick={() => openDialogDeleteProductAction(productId)}
     >
       <Trash className="size-4" />
     </Button>

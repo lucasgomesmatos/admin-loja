@@ -1,29 +1,42 @@
 'use client';
 import { createProductAction } from '@/app/actions/product/create-product';
+import { fetchDeleteFiles } from '@/app/actions/product/delete-files';
 import { ButtonLoading } from '@/components/button-loading';
 import DropzoneInput from '@/components/dropzone-input';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { FileContent } from '@/utils/types/file-content';
 import { KeyRound, Type } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useFormState } from 'react-dom';
 import { toast } from 'sonner';
 import { useProductStore } from '../store/store';
 import {
   appendFilesToFormData,
-  formFieldsFilledOutCorrectly,
+  formFieldsFilledOutCorrectlyUpdate,
   initialStateCreateProduct,
 } from '../utils/products-utils';
 
-export default function FormRegisterProduct() {
+interface FormUpdateProductProps {
+  files: FileContent[];
+}
+
+export default function FormUpdateProduct({ files }: FormUpdateProductProps) {
+  const nameProduct = useSearchParams().get('name');
+  const idWoocommerce = useSearchParams().get('idWoocommerce');
+
+  const { replace } = useRouter();
+
   const {
-    productId,
     productName,
-    reset,
+    productId,
     productFiles,
+    setProductCurrentFilesAction,
     addProductNameValueAction,
     addProductIdValueAction,
-    resetOnLoad,
+    productFilesDelete,
+    resetUpdate,
   } = useProductStore();
 
   const [state, action] = useFormState(
@@ -31,32 +44,65 @@ export default function FormRegisterProduct() {
     initialStateCreateProduct,
   );
 
+  const [stateUpdate, actionDelete] = useFormState(
+    () => fetchDeleteFiles(productFilesDelete),
+    initialStateCreateProduct,
+  );
+
   useEffect(() => {
-    resetOnLoad();
-  }, [resetOnLoad]);
+    setProductCurrentFilesAction(files);
+    addProductNameValueAction(nameProduct!);
+    addProductIdValueAction(idWoocommerce!);
+  }, [
+    files,
+    setProductCurrentFilesAction,
+    addProductNameValueAction,
+    addProductIdValueAction,
+    nameProduct,
+    idWoocommerce,
+  ]);
+
+  useEffect(() => {
+    if (stateUpdate.error.length) {
+      toast.error(stateUpdate.error);
+    }
+
+    if (stateUpdate.ok && productId) {
+      replace(`/dashboard/products`);
+      toast.success(`Arquivos atualizados com sucesso.`);
+    }
+  }, [stateUpdate, productId, replace]);
 
   useEffect(() => {
     if (state.error.length) {
       toast.error(state.error);
     }
     if (state.ok && productId) {
-      reset();
+      resetUpdate();
+      replace(`/dashboard/products`);
       toast.success(`Produto e arquivos registrados com sucesso.`);
     }
-  }, [state, productId, reset]);
+  }, [state, productId, resetUpdate, replace]);
 
-  const onSubmit = async (data: FormData) => {
-    for (const file of productFiles) {
-      const formData = appendFilesToFormData(data, file);
-      await action(formData);
-    }
-  };
-
-  const buttonDisabled = formFieldsFilledOutCorrectly({
+  const buttonDisabled = formFieldsFilledOutCorrectlyUpdate({
     name: productName!,
     id: productId!,
     files: productFiles,
+    filesProductDelete: productFilesDelete,
   });
+
+  const onSubmit = async (data: FormData) => {
+    if (productFiles.length) {
+      for (const file of productFiles) {
+        const formData = appendFilesToFormData(data, file);
+        await action(formData);
+      }
+    }
+
+    if (productFilesDelete.length) {
+      await actionDelete();
+    }
+  };
 
   return (
     <form action={onSubmit} className="grid grid-cols-2 gap-8 max-w-[880px]">
@@ -68,7 +114,7 @@ export default function FormRegisterProduct() {
             <Input
               className="w-full bg-white shadow-none appearance-none pl-8  placeholder:text-sm"
               placeholder="ex: bingo da matemática"
-              value={productName || ''}
+              value={productName!}
               name="name"
               onChange={({ target }) => addProductNameValueAction(target.value)}
             />
@@ -82,7 +128,7 @@ export default function FormRegisterProduct() {
               className="w-full bg-white shadow-none appearance-none pl-8  placeholder:text-sm"
               placeholder="ex: 1234"
               name="id"
-              value={productId || ''}
+              value={productId!}
               onChange={({ target }) => addProductIdValueAction(target.value)}
               title="Digite números"
             />

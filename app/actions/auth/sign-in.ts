@@ -20,8 +20,6 @@ export async function signInUserAction(state: {}, formData: FormData) {
       },
     );
 
-    console.log(response);
-
     if (!response.ok) {
       throw new Error('Email ou senha inválidas');
     }

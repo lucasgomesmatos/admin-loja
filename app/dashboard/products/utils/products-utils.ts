@@ -1,3 +1,4 @@
+import { FileContent } from '@/utils/types/file-content';
 import { z } from 'zod';
 
 export const formSchemaCreateProduct = z.object({
@@ -36,6 +37,25 @@ export const formFieldsFilledOutCorrectly = ({
 }) => {
   const disabled =
     Boolean(name?.length) && Boolean(id?.length) && Boolean(files?.length);
+
+  return !disabled;
+};
+export const formFieldsFilledOutCorrectlyUpdate = ({
+  name,
+  id,
+  files,
+  filesProductDelete,
+}: {
+  name: string;
+  id: string;
+  files: File[];
+  filesProductDelete: FileContent[];
+}) => {
+  const disabledFiles =
+    Boolean(files?.length) || Boolean(filesProductDelete?.length);
+
+  const disabled =
+    Boolean(name?.length) && Boolean(id?.length) && disabledFiles;
 
   return !disabled;
 };

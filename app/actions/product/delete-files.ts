@@ -2,26 +2,33 @@
 
 import { environment } from '@/lib/env';
 import { apiError } from '@/utils/functions/api-error';
+import { FileContent } from '@/utils/types/file-content';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
-export async function fetchDeleteProduct(productId: string | null) {
+export async function fetchDeleteFiles(productFilesDelete: FileContent[]) {
   const token = cookies().get('token')?.value;
+
+  const ids = productFilesDelete?.map((file) => file.id);
 
   try {
     const response = await fetch(
-      `${environment.NEXT_PUBLIC_API_BASE_URL}/products/${productId}`,
+      `${environment.NEXT_PUBLIC_API_BASE_URL}/files`,
       {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
+
+        body: JSON.stringify({
+          ids,
+        }),
       },
     );
 
     if (!response.ok) {
-      throw new Error('Erro ao excluir produto ');
+      throw new Error('Erro ao excluir arquivos');
     }
 
     revalidatePath('/products');

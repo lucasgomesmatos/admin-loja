@@ -1,19 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { api } from '@/lib/fecth';
+import { FileContent } from '@/utils/types/file-content';
 import { ArrowLeft, FileText, LinkIcon } from 'lucide-react';
 import Link from 'next/link';
 
-interface FileContent {
-  id: number;
-  name: string;
-  url: string;
-  keyFile: string;
-  product: string;
-}
-
 async function fetchFiles(id: string): Promise<FileContent[]> {
-  const response = await api(`files/${id}`);
+  const response = await api(`products/${id}/files`);
   const files = await response.json();
 
   return files;
