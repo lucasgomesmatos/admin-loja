@@ -1,15 +1,18 @@
 import { api } from "@/lib/fecth";
 
 interface CategoriesResponse {
-  id: string;
-  name: string;
+  categories: {
+    id: number;
+    name: string;
+  }[];
+  total: number;
 }
 
 export async function fetchCategories(
   page = 1,
   query = "",
   paginate = false
-): Promise<CategoriesResponse[]> {
+): Promise<CategoriesResponse> {
   const response = await api(
     `categories?page=${page}&query=${query}&paginate=${paginate}`,
     {
@@ -20,7 +23,10 @@ export async function fetchCategories(
     }
   );
 
-  const categories = await response.json();
+  const { categories, total } = await response.json();
 
-  return categories;
+  return {
+    categories,
+    total,
+  };
 }

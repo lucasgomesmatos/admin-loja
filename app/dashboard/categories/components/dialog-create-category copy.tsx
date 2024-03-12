@@ -12,15 +12,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Type } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { useCategoryStore } from "../store/store-category";
-import {
-  formCategoryFieldsFilledOutCorrectly,
-  initialStateCreateCategory,
-} from "../utils/categories-utils";
+import { initialStateCreateCategory } from "../utils/categories-utils";
 
 export default function DialogCreateCategory() {
   const {
@@ -29,8 +25,6 @@ export default function DialogCreateCategory() {
     addCategoryNameValueAction,
     categoryNameValue,
   } = useCategoryStore();
-
-  const { replace } = useRouter();
 
   const [state, action] = useFormState(
     () => fetchCreateCategory(categoryNameValue!),
@@ -42,27 +36,19 @@ export default function DialogCreateCategory() {
       toast.error(state.error);
     }
 
-    if (state.ok) {
+    if (state.ok && dialogCreateCategoryOpen.open) {
       toast.success(`Categoria criada com sucesso.`);
-      openDialogCreateCategoryAction(false);
-      state.ok = false;
+      openDialogCreateCategoryAction();
     }
-  }, [
-    state,
-    openDialogCreateCategoryAction,
-    dialogCreateCategoryOpen,
-    replace,
-  ]);
+  }, [state, openDialogCreateCategoryAction, dialogCreateCategoryOpen]);
 
-  const disabled = formCategoryFieldsFilledOutCorrectly({
-    name: categoryNameValue!,
-  });
+  if (!dialogCreateCategoryOpen.open) return null;
 
   return (
     <>
       <Dialog
         open={dialogCreateCategoryOpen.open}
-        onOpenChange={() => openDialogCreateCategoryAction(false)}
+        onOpenChange={() => openDialogCreateCategoryAction()}
       >
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -86,9 +72,7 @@ export default function DialogCreateCategory() {
                 </div>
               </div>
 
-              <ButtonLoading disabled={disabled} type="submit">
-                Salvar
-              </ButtonLoading>
+              <ButtonLoading type="submit">Salvar</ButtonLoading>
             </form>
           </DialogFooter>
         </DialogContent>

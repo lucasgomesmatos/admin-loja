@@ -3,6 +3,8 @@ import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { EditIcon, Layers } from "lucide-react";
 
 import { fetchCategories } from "@/app/actions/categories/get-all-categories";
+import { Pagination } from "@/components/pagination";
+import { Metadata } from "next";
 import { ButtonCreateCategory } from "./components/button-create-category";
 import DialogCreateCategory from "./components/dialog-create-category";
 import { SearchCategories } from "./components/search-categories";
@@ -11,8 +13,15 @@ export const metadata: Metadata = {
   title: "Categorias",
 };
 
-export default async function CategoriesPage() {
-  const categories = await fetchCategories();
+export default async function CategoriesPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const page = Number(searchParams.page ?? 1);
+  const query = String(searchParams.search ?? "");
+
+  const { categories, total } = await fetchCategories(page, query);
 
   return (
     <>
@@ -45,6 +54,12 @@ export default async function CategoriesPage() {
             </Card>
           ))}
         </div>
+        <Pagination
+          pageIndex={page - 1}
+          perPage={16}
+          totalCount={total}
+          result={categories}
+        />
         <DialogCreateCategory />
       </main>
     </>

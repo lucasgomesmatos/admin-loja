@@ -9,7 +9,7 @@ export const ButtonCreateCategory = () => {
 
   return (
     <Button
-      onClick={openDialogCreateCategoryAction}
+      onClick={() => openDialogCreateCategoryAction(true)}
       className="flex gap-2 items-center"
     >
       <Plus className="size-4" /> CRIAR NOVA CATEGORIA

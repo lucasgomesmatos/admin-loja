@@ -17,7 +17,7 @@ interface CategoryStoreState {
 }
 
 interface CategoryStoreActions {
-  openDialogCreateCategoryAction: () => void;
+  openDialogCreateCategoryAction: (open: boolean) => void;
   openDialogUpdateCategoryAction: (categoryId: string | null) => void;
   openDialogDeleteCategoryAction: (categoryId: string | null) => void;
   addCategoryNameValueAction: (nameValue: string) => void;
@@ -40,12 +40,13 @@ export const useCategoryStore = create<
     open: false,
     categoryId: null,
   },
-  openDialogCreateCategoryAction: () => {
-    set((state) => ({
+  openDialogCreateCategoryAction: (open) => {
+    set({
       dialogCreateCategoryOpen: {
-        open: !state.dialogCreateCategoryOpen.open,
+        open: open,
       },
-    }));
+      categoryNameValue: null,
+    });
   },
 
   openDialogUpdateCategoryAction: (categoryId: string | null) => {

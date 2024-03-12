@@ -3,3 +3,13 @@ export const initialStateCreateCategory = {
   ok: false,
   error: "",
 };
+
+export const formCategoryFieldsFilledOutCorrectly = ({
+  name,
+}: {
+  name: string;
+}) => {
+  const disabled = Boolean(name?.length);
+
+  return !disabled;
+};
