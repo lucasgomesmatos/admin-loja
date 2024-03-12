@@ -1,15 +1,16 @@
-import { api } from '@/lib/fecth';
+import { api } from "@/lib/fecth";
 import {
   Building,
   ChevronDown,
   Home,
+  Layers2,
   Library,
   ScanBarcode,
   Users,
-} from 'lucide-react';
-import { ButtonLogout } from './button-logout';
-import { NavLink } from './nav-link';
-import { Button } from './ui/button';
+} from "lucide-react";
+import { ButtonLogout } from "./button-logout";
+import { NavLink } from "./nav-link";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +18,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
+} from "./ui/dropdown-menu";
 
 interface SideBarProps {
   name: string;
@@ -32,7 +33,7 @@ interface UserProps {
 }
 
 async function fetchProfile(): Promise<UserProps> {
-  const response = await api('me');
+  const response = await api("me");
   const profile = await response.json();
 
   return profile;
@@ -81,6 +82,11 @@ export async function SideBar() {
             <NavLink href="#">
               <Users className="h-4 w-4" />
               Usuários
+            </NavLink>
+
+            <NavLink href="/dashboard/categories">
+              <Layers2 className="h-4 w-4" />
+              Categorias
             </NavLink>
 
             <NavLink href="/dashboard/products">

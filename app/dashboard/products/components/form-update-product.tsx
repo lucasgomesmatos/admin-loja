@@ -1,30 +1,30 @@
-'use client';
-import { createProductAction } from '@/app/actions/product/create-product';
-import { fetchDeleteFiles } from '@/app/actions/product/delete-files';
-import { ButtonLoading } from '@/components/button-loading';
-import DropzoneInput from '@/components/dropzone-input';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { FileContent } from '@/utils/types/file-content';
-import { KeyRound, Type } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
-import { useFormState } from 'react-dom';
-import { toast } from 'sonner';
-import { useProductStore } from '../store/store';
+"use client";
+import { createProductAction } from "@/app/actions/products/create-product";
+import { fetchDeleteFiles } from "@/app/actions/products/delete-files";
+import { ButtonLoading } from "@/components/button-loading";
+import DropzoneInput from "@/components/dropzone-input";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { FileContent } from "@/utils/types/file-content";
+import { KeyRound, Type } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "sonner";
+import { useProductStore } from "../store/store";
 import {
   appendFilesToFormData,
   formFieldsFilledOutCorrectlyUpdate,
   initialStateCreateProduct,
-} from '../utils/products-utils';
+} from "../utils/products-utils";
 
 interface FormUpdateProductProps {
   files: FileContent[];
 }
 
 export default function FormUpdateProduct({ files }: FormUpdateProductProps) {
-  const nameProduct = useSearchParams().get('name');
-  const idWoocommerce = useSearchParams().get('idWoocommerce');
+  const nameProduct = useSearchParams().get("name");
+  const idWoocommerce = useSearchParams().get("idWoocommerce");
 
   const { replace } = useRouter();
 
@@ -37,16 +37,17 @@ export default function FormUpdateProduct({ files }: FormUpdateProductProps) {
     addProductIdValueAction,
     productFilesDelete,
     resetUpdate,
+    currentProductFiles,
   } = useProductStore();
 
   const [state, action] = useFormState(
     createProductAction,
-    initialStateCreateProduct,
+    initialStateCreateProduct
   );
 
   const [stateUpdate, actionDelete] = useFormState(
     () => fetchDeleteFiles(productFilesDelete),
-    initialStateCreateProduct,
+    initialStateCreateProduct
   );
 
   useEffect(() => {
@@ -89,6 +90,7 @@ export default function FormUpdateProduct({ files }: FormUpdateProductProps) {
     id: productId!,
     files: productFiles,
     filesProductDelete: productFilesDelete,
+    filesCurrent: currentProductFiles,
   });
 
   const onSubmit = async (data: FormData) => {

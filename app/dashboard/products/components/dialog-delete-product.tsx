@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { fetchDeleteProduct } from '@/app/actions/product/delete-product';
-import { ButtonLoading } from '@/components/button-loading';
+import { fetchDeleteProduct } from "@/app/actions/products/delete-product";
+import { ButtonLoading } from "@/components/button-loading";
 import {
   Dialog,
   DialogContent,
@@ -9,12 +9,12 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { useEffect } from 'react';
-import { useFormState } from 'react-dom';
-import { toast } from 'sonner';
-import { useProductStore } from '../store/store';
-import { initialStateCreateProduct } from '../utils/products-utils';
+} from "@/components/ui/dialog";
+import { useEffect } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "sonner";
+import { useProductStore } from "../store/store";
+import { initialStateCreateProduct } from "../utils/products-utils";
 
 export default function DialogDeleteProduct() {
   const { openDialogDeleteProductAction, dialogDeleteProductOpen } =
@@ -22,7 +22,7 @@ export default function DialogDeleteProduct() {
 
   const [state, action] = useFormState(
     () => fetchDeleteProduct(dialogDeleteProductOpen.productId),
-    initialStateCreateProduct,
+    initialStateCreateProduct
   );
 
   useEffect(() => {

@@ -1,22 +1,22 @@
-import { fetchProducts } from '@/app/actions/product/get-all-products';
-import { Header } from '@/components/header';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { EditIcon, Files, LibraryBig, Plus } from 'lucide-react';
-import Link from 'next/link';
-import { DeleteButtonProduct } from './components/delete-button-product';
+} from "@/components/ui/card";
+import { EditIcon, Files, LibraryBig, Plus } from "lucide-react";
+import Link from "next/link";
+import { DeleteButtonProduct } from "./components/delete-button-product";
 
-import dynamic from 'next/dynamic';
+import { fetchProducts } from "@/app/actions/products/get-all-products";
+import dynamic from "next/dynamic";
+import { SearchProducts } from "./components/search-products";
 
 const DialogDeleteProduct = dynamic(
-  () => import('./components/dialog-delete-product'),
-  { ssr: false },
+  () => import("./components/dialog-delete-product"),
+  { ssr: false }
 );
 
 export default async function ProductPage() {
@@ -24,13 +24,13 @@ export default async function ProductPage() {
 
   return (
     <>
-      <Header />
+      <SearchProducts />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold tracking-tight">Produtos</h1>
           <Link href="/dashboard/products/register">
             <Button className="flex gap-2 items-center">
-              <Plus className="size-4" /> CRIAR NO PRODUTO
+              <Plus className="size-4" /> CRIAR NOVO PRODUTO
             </Button>
           </Link>
         </div>

@@ -1,5 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DollarSign } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DollarSign } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 export default async function Home() {
   return (
@@ -25,7 +30,7 @@ export default async function Home() {
             <p className="text-xs text-muted-foreground">
               <span className="text-emerald-500 dark:text-emerald-400">
                 +2%
-              </span>{' '}
+              </span>{" "}
               em relação ao mes anterior
             </p>
           </CardContent>

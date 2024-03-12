@@ -1,21 +1,34 @@
-'use client';
-import { createProductAction } from '@/app/actions/product/create-product';
-import { ButtonLoading } from '@/components/button-loading';
-import DropzoneInput from '@/components/dropzone-input';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { KeyRound, Type } from 'lucide-react';
-import { useEffect } from 'react';
-import { useFormState } from 'react-dom';
-import { toast } from 'sonner';
-import { useProductStore } from '../store/store';
+"use client";
+import { createProductAction } from "@/app/actions/products/create-product";
+import { ButtonLoading } from "@/components/button-loading";
+import DropzoneInput from "@/components/dropzone-input";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ChevronDown, KeyRound, Type } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "sonner";
+import { useProductStore } from "../store/store";
 import {
   appendFilesToFormData,
   formFieldsFilledOutCorrectly,
   initialStateCreateProduct,
-} from '../utils/products-utils';
+} from "../utils/products-utils";
+
+import { Button } from "@/components/ui/button";
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+
+type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 export default function FormRegisterProduct() {
+  const [showStatusBar, setShowStatusBar] = useState<Checked>(true);
+
   const {
     productId,
     productName,
@@ -28,7 +41,7 @@ export default function FormRegisterProduct() {
 
   const [state, action] = useFormState(
     createProductAction,
-    initialStateCreateProduct,
+    initialStateCreateProduct
   );
 
   useEffect(() => {
@@ -68,7 +81,7 @@ export default function FormRegisterProduct() {
             <Input
               className="w-full bg-white shadow-none appearance-none pl-8  placeholder:text-sm"
               placeholder="ex: bingo da matemática"
-              value={productName || ''}
+              value={productName || ""}
               name="name"
               onChange={({ target }) => addProductNameValueAction(target.value)}
             />
@@ -82,10 +95,33 @@ export default function FormRegisterProduct() {
               className="w-full bg-white shadow-none appearance-none pl-8  placeholder:text-sm"
               placeholder="ex: 1234"
               name="id"
-              value={productId || ''}
+              value={productId || ""}
               onChange={({ target }) => addProductIdValueAction(target.value)}
               title="Digite números"
             />
+          </div>
+        </div>
+        <div className=" space-y-1">
+          <div className="flex h-[60px] items-center w-full ">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild className="w-full">
+                <Button
+                  variant="outline"
+                  className="flex select-none items-center gap-2 justify-between"
+                >
+                  Selecione alguma categoria
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[420px]">
+                <DropdownMenuCheckboxItem
+                  checked={showStatusBar}
+                  onCheckedChange={setShowStatusBar}
+                >
+                  Todas
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 

@@ -1,24 +1,7 @@
-import { api } from '@/lib/fecth';
-import { Search } from 'lucide-react';
-import { Input } from './ui/input';
-
-interface UserProps {
-  id: string;
-  name: string;
-  email: string;
-  cpf: string;
-}
-
-async function fetchProfile(): Promise<UserProps> {
-  const response = await api('me');
-  const profile = await response.json();
-
-  return profile;
-}
+import { Search } from "lucide-react";
+import { Input } from "./ui/input";
 
 export async function Header() {
-  const user = await fetchProfile();
-
   return (
     <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-8 dark:bg-gray-800/40">
       <div className="w-full flex-1">

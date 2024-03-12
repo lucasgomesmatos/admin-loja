@@ -1,20 +1,20 @@
-import { FileContent } from '@/utils/types/file-content';
-import { z } from 'zod';
+import { FileContent } from "@/utils/types/file-content";
+import { z } from "zod";
 
 export const formSchemaCreateProduct = z.object({
   name: z
     .string({
-      required_error: 'Nome do produto é obrigatório',
+      required_error: "Nome do produto é obrigatório",
     })
     .min(3, {
-      message: 'Nome do produto deve ter no mínimo 3 caracteres',
+      message: "Nome do produto deve ter no mínimo 3 caracteres",
     }),
   id: z
     .string({
-      required_error: 'ID Woocomerce é obrigatório',
+      required_error: "ID Woocomerce é obrigatório",
     })
     .min(1, {
-      message: 'ID Woocomerce é obrigatório',
+      message: "ID Woocomerce é obrigatório",
     }),
 });
 
@@ -23,7 +23,7 @@ export type FormSchemaCreateProduct = z.infer<typeof formSchemaCreateProduct>;
 export const initialStateCreateProduct = {
   data: null,
   ok: false,
-  error: '',
+  error: "",
 };
 
 export const formFieldsFilledOutCorrectly = ({
@@ -45,12 +45,18 @@ export const formFieldsFilledOutCorrectlyUpdate = ({
   id,
   files,
   filesProductDelete,
+  filesCurrent,
 }: {
   name: string;
   id: string;
   files: File[];
   filesProductDelete: FileContent[];
+  filesCurrent: FileContent[];
 }) => {
+  const filesLength = files.length === 0 && filesCurrent.length === 0;
+
+  if (filesLength) return true;
+
   const disabledFiles =
     Boolean(files?.length) || Boolean(filesProductDelete?.length);
 
@@ -63,20 +69,20 @@ export const formFieldsFilledOutCorrectlyUpdate = ({
 export const appendFilesToFormData = (data: FormData, file: File) => {
   const formData = new FormData();
 
-  const nameProduct = data.get('name') as string;
-  const idWoocommerce = data.get('id') as string;
+  const nameProduct = data.get("name") as string;
+  const idWoocommerce = data.get("id") as string;
 
-  formData.append('nameProduct', nameProduct);
-  formData.append('idWoocommerce', idWoocommerce);
-  formData.append('contentType', file.type);
-  formData.append('nameFile', file.name);
-  formData.append('file', file);
+  formData.append("nameProduct", nameProduct);
+  formData.append("idWoocommerce", idWoocommerce);
+  formData.append("contentType", file.type);
+  formData.append("nameFile", file.name);
+  formData.append("file", file);
 
   return formData;
 };
 
 export const normalizeNumber = (value: string | undefined) => {
-  if (!value) return '';
+  if (!value) return "";
 
-  return value.replace(/\D/g, '');
+  return value.replace(/\D/g, "");
 };
