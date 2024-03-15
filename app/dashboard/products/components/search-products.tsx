@@ -12,13 +12,89 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-import { useState } from "react";
+import { useDebounce } from "@/utils/hooks/useDebounce";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { generateCheckbox } from "../utils/products-utils";
 
-type Checked = DropdownMenuCheckboxItemProps["checked"];
+interface SearchProductsProps {
+  categories: {
+    id: string;
+    name: string;
+  }[];
+}
 
-export const SearchProducts = () => {
-  const [showStatusBar, setShowStatusBar] = useState<Checked>(true);
+export const SearchProducts = ({ categories }: SearchProductsProps) => {
+  const { push } = useRouter();
+  const pathname = usePathname();
+  const search = useSearchParams();
+  const query = search.get("search");
+  const page = search.get("page");
+
+  const [text, setText] = useState(query ?? "");
+  const filter = useDebounce(2000, text);
+
+  const [checkboxes, setCheckboxes] = useState(
+    generateCheckbox({ categories })
+  );
+
+  const handleAllCheckboxesChecked = () => {
+    const allCheckboxesChecked = checkboxes.every(
+      (checkbox) => checkbox.checked
+    );
+
+    setCheckboxes(
+      checkboxes.map((checkbox) => {
+        return {
+          ...checkbox,
+          checked: !allCheckboxesChecked,
+        };
+      })
+    );
+  };
+
+  const handleOptionCheckboxes = (id: string) => {
+    setCheckboxes(
+      checkboxes.map((checkbox) => {
+        if (checkbox.id === id) {
+          return {
+            ...checkbox,
+            checked: !checkbox.checked,
+          };
+        }
+        return checkbox;
+      })
+    );
+  };
+
+  const allCheckboxes = checkboxes.every((checkbox) => checkbox.checked);
+
+  const handleSearchAndPagination = useCallback(() => {
+    let path = pathname;
+
+    if (filter) {
+      path += `?search=${filter}`;
+    }
+
+    if (page) {
+      path += `${filter ? "&" : "?"}page=${page}`;
+    }
+
+    if (checkboxes) {
+      const categoriesData = checkboxes
+        .filter((checkbox) => checkbox.checked)
+        .map((checkbox) => checkbox.id)
+        .join(",");
+
+      path += `${filter || page ? "&" : "?"}categories=${categoriesData}`;
+    }
+
+    push(path);
+  }, [filter, page, pathname, push, checkboxes]);
+
+  useEffect(() => {
+    handleSearchAndPagination();
+  }, [handleSearchAndPagination]);
 
   return (
     <header className="flex w-full h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-8 dark:bg-gray-800/40">
@@ -30,6 +106,8 @@ export const SearchProducts = () => {
               className=" bg-white shadow-none appearance-none pl-8  dark:bg-gray-950 "
               placeholder="Pesquisar..."
               type="search"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
             />
           </div>
         </form>
@@ -52,11 +130,22 @@ export const SearchProducts = () => {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuCheckboxItem
-                    checked={showStatusBar}
-                    onCheckedChange={setShowStatusBar}
+                    checked={allCheckboxes}
+                    onCheckedChange={handleAllCheckboxesChecked}
                   >
                     Todas
                   </DropdownMenuCheckboxItem>
+                  {checkboxes.map((checkbox) => (
+                    <DropdownMenuCheckboxItem
+                      onCheckedChange={() =>
+                        handleOptionCheckboxes(checkbox.id)
+                      }
+                      checked={checkbox.checked}
+                      key={checkbox.id}
+                    >
+                      {checkbox.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

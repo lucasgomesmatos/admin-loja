@@ -1,20 +1,28 @@
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
-import { api } from '@/lib/fecth';
-import { FileContent } from '@/utils/types/file-content';
-import dynamic from 'next/dynamic';
+import { fetchCategories } from "@/app/actions/categories/get-all-categories";
+import { api } from "@/lib/fecth";
+import { Category } from "@/utils/types/category";
+import { FileContent } from "@/utils/types/file-content";
+import dynamic from "next/dynamic";
 const FormUpdateProduct = dynamic(
-  () => import('@/app/dashboard/products/components/form-update-product'),
-  { ssr: false },
+  () => import("@/app/dashboard/products/components/form-update-product"),
+  { ssr: false }
 );
 
-async function fetchFiles(id: string): Promise<FileContent[]> {
+async function fetchFiles(id: string): Promise<{
+  files: FileContent[];
+  categories: Category[];
+}> {
   const response = await api(`products/${id}/files`);
-  const files = await response.json();
+  const { files, categories } = await response.json();
 
-  return files;
+  return {
+    files,
+    categories,
+  };
 }
 
 interface UpdatePageProps {
@@ -30,7 +38,8 @@ export default async function UpdatePage({
   params,
   searchParams,
 }: UpdatePageProps) {
-  const files = await fetchFiles(params.id);
+  const { files, categories: categoriesProduct } = await fetchFiles(params.id);
+  const { categories } = await fetchCategories();
 
   return (
     <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-6 ">
@@ -45,7 +54,11 @@ export default async function UpdatePage({
         </h1>
       </div>
 
-      <FormUpdateProduct files={files} />
+      <FormUpdateProduct
+        files={files}
+        categories={categories}
+        categoriesChecked={categoriesProduct}
+      />
     </main>
   );
 }

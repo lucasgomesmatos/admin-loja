@@ -2,7 +2,7 @@ import { api } from "@/lib/fecth";
 
 interface CategoriesResponse {
   categories: {
-    id: number;
+    id: string;
     name: string;
   }[];
   total: number;

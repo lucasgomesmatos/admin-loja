@@ -18,16 +18,39 @@ import { useProductStore } from "../store/store";
 import {
   appendFilesToFormData,
   formFieldsFilledOutCorrectly,
+  generateCheckbox,
   initialStateCreateProduct,
 } from "../utils/products-utils";
 
 import { Button } from "@/components/ui/button";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 
-type Checked = DropdownMenuCheckboxItemProps["checked"];
+interface FormRegisterProductProps {
+  categories: {
+    id: string;
+    name: string;
+  }[];
+}
 
-export default function FormRegisterProduct() {
-  const [showStatusBar, setShowStatusBar] = useState<Checked>(true);
+export default function FormRegisterProduct({
+  categories,
+}: FormRegisterProductProps) {
+  const [checkboxes, setCheckboxes] = useState(
+    generateCheckbox({ categories, checked: false })
+  );
+
+  const handleOptionCheckboxes = (id: string) => {
+    setCheckboxes(
+      checkboxes.map((checkbox) => {
+        if (checkbox.id === id) {
+          return {
+            ...checkbox,
+            checked: !checkbox.checked,
+          };
+        }
+        return checkbox;
+      })
+    );
+  };
 
   const {
     productId,
@@ -60,7 +83,7 @@ export default function FormRegisterProduct() {
 
   const onSubmit = async (data: FormData) => {
     for (const file of productFiles) {
-      const formData = appendFilesToFormData(data, file);
+      const formData = appendFilesToFormData(data, file, checkboxes);
       await action(formData);
     }
   };
@@ -69,6 +92,7 @@ export default function FormRegisterProduct() {
     name: productName!,
     id: productId!,
     files: productFiles,
+    checkboxes,
   });
 
   return (
@@ -109,17 +133,20 @@ export default function FormRegisterProduct() {
                   variant="outline"
                   className="flex select-none items-center gap-2 justify-between"
                 >
-                  Selecione alguma categoria
+                  Selecione pelo menos uma categoria
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[420px]">
-                <DropdownMenuCheckboxItem
-                  checked={showStatusBar}
-                  onCheckedChange={setShowStatusBar}
-                >
-                  Todas
-                </DropdownMenuCheckboxItem>
+                {checkboxes.map((checkbox) => (
+                  <DropdownMenuCheckboxItem
+                    onCheckedChange={() => handleOptionCheckboxes(checkbox.id)}
+                    checked={checkbox.checked}
+                    key={checkbox.id}
+                  >
+                    {checkbox.label}
+                  </DropdownMenuCheckboxItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

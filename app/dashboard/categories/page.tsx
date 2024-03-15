@@ -1,12 +1,17 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { EditIcon, Layers } from "lucide-react";
+import { Layers } from "lucide-react";
 
 import { fetchCategories } from "@/app/actions/categories/get-all-categories";
+import { NoResults } from "@/components/no-results";
 import { Pagination } from "@/components/pagination";
+import { CONSTANTS } from "@/utils/functions/constants";
 import { Metadata } from "next";
 import { ButtonCreateCategory } from "./components/button-create-category";
+import { ButtonDeleteCategory } from "./components/button-delete-category";
+import { ButtonUpdateCategory } from "./components/button-update-category";
 import DialogCreateCategory from "./components/dialog-create-category";
+import DialogDeleteCategory from "./components/dialog-delete-category";
+import DialogUpdateCategory from "./components/dialog-update-category";
 import { SearchCategories } from "./components/search-categories";
 
 export const metadata: Metadata = {
@@ -21,12 +26,12 @@ export default async function CategoriesPage({
   const page = Number(searchParams.page ?? 1);
   const query = String(searchParams.search ?? "");
 
-  const { categories, total } = await fetchCategories(page, query);
+  const { categories, total } = await fetchCategories(page, query, true);
 
   return (
     <>
       <SearchCategories />
-      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 ">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold tracking-tight">Categorias</h1>
 
@@ -43,24 +48,30 @@ export default async function CategoriesPage({
               </CardHeader>
 
               <CardFooter className="space-x-4">
-                <Button
-                  title="Editar Categoria"
-                  variant="outline"
-                  className="bg-emerald-400 hover:bg-emerald-500"
-                >
-                  <EditIcon className="size-4 text-emerald-950" />
-                </Button>
+                <ButtonUpdateCategory
+                  categoryId={category.id}
+                  name={category.name}
+                />
+                <ButtonDeleteCategory
+                  categoryId={category.id}
+                  name={category.name}
+                />
               </CardFooter>
             </Card>
           ))}
         </div>
-        <Pagination
-          pageIndex={page - 1}
-          perPage={16}
-          totalCount={total}
-          result={categories}
-        />
+        {!categories.length && <NoResults />}
+        {total > CONSTANTS.POR_PAGES && (
+          <Pagination
+            pageIndex={page - 1}
+            perPage={CONSTANTS.POR_PAGES}
+            totalCount={total}
+            result={categories}
+          />
+        )}
         <DialogCreateCategory />
+        <DialogUpdateCategory />
+        <DialogDeleteCategory />
       </main>
     </>
   );

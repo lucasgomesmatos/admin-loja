@@ -1,15 +1,15 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { api } from '@/lib/fecth';
-import { FileContent } from '@/utils/types/file-content';
-import { ArrowLeft, FileText, LinkIcon } from 'lucide-react';
-import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { api } from "@/lib/fecth";
+import { FileContent } from "@/utils/types/file-content";
+import { ArrowLeft, FileText, LinkIcon } from "lucide-react";
+import Link from "next/link";
 
 async function fetchFiles(id: string): Promise<FileContent[]> {
   const response = await api(`products/${id}/files`);
-  const files = await response.json();
+  const data = await response.json();
 
-  return files;
+  return data.files;
 }
 
 interface FilePageProps {
@@ -36,7 +36,7 @@ export default async function FilePage({
           </Button>
         </Link>
         <h1 className="text-2xl font-bold tracking-tight">
-          {searchParams.name}:{' '}
+          {searchParams.name}:{" "}
           <span className="font-medium text-xl">Arquivos</span>
         </h1>
       </div>

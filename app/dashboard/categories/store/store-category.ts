@@ -6,10 +6,12 @@ interface CategoryStoreState {
   };
   dialogUpdateCategoryOpen: {
     open: boolean;
+    nameCategory: string | null;
     categoryId: string | null;
   };
   dialogDeleteCategoryOpen: {
     open: boolean;
+    nameCategory: string | null;
     categoryId: string | null;
   };
 
@@ -18,8 +20,14 @@ interface CategoryStoreState {
 
 interface CategoryStoreActions {
   openDialogCreateCategoryAction: (open: boolean) => void;
-  openDialogUpdateCategoryAction: (categoryId: string | null) => void;
-  openDialogDeleteCategoryAction: (categoryId: string | null) => void;
+  openDialogUpdateCategoryAction: (
+    nameCategory: string | null,
+    categoryId: string | null
+  ) => void;
+  openDialogDeleteCategoryAction: (
+    nameCategory: string | null,
+    categoryId: string | null
+  ) => void;
   addCategoryNameValueAction: (nameValue: string) => void;
 }
 
@@ -31,6 +39,7 @@ export const useCategoryStore = create<
   },
   dialogUpdateCategoryOpen: {
     open: false,
+    nameCategory: null,
     categoryId: null,
   },
 
@@ -38,6 +47,7 @@ export const useCategoryStore = create<
 
   dialogDeleteCategoryOpen: {
     open: false,
+    nameCategory: null,
     categoryId: null,
   },
   openDialogCreateCategoryAction: (open) => {
@@ -49,19 +59,23 @@ export const useCategoryStore = create<
     });
   },
 
-  openDialogUpdateCategoryAction: (categoryId: string | null) => {
+  openDialogUpdateCategoryAction: (nameCategory, categoryId) => {
     set((state) => ({
       dialogUpdateCategoryOpen: {
         open: !state.dialogUpdateCategoryOpen.open,
+        nameCategory: nameCategory,
         categoryId: categoryId,
       },
     }));
+
+    set({ categoryNameValue: nameCategory });
   },
-  openDialogDeleteCategoryAction: (categoryId: string | null) => {
+  openDialogDeleteCategoryAction: (nameCategory, categoryId) => {
     set((state) => ({
       dialogDeleteCategoryOpen: {
         open: !state.dialogDeleteCategoryOpen.open,
         categoryId: categoryId,
+        nameCategory: nameCategory,
       },
     }));
   },

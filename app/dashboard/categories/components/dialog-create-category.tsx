@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Type } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
@@ -30,8 +29,6 @@ export default function DialogCreateCategory() {
     categoryNameValue,
   } = useCategoryStore();
 
-  const { replace } = useRouter();
-
   const [state, action] = useFormState(
     () => fetchCreateCategory(categoryNameValue!),
     initialStateCreateCategory
@@ -47,12 +44,7 @@ export default function DialogCreateCategory() {
       openDialogCreateCategoryAction(false);
       state.ok = false;
     }
-  }, [
-    state,
-    openDialogCreateCategoryAction,
-    dialogCreateCategoryOpen,
-    replace,
-  ]);
+  }, [state, openDialogCreateCategoryAction, dialogCreateCategoryOpen]);
 
   const disabled = formCategoryFieldsFilledOutCorrectly({
     name: categoryNameValue!,

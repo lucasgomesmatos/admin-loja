@@ -10,7 +10,11 @@ import { EditIcon, Files, LibraryBig, Plus } from "lucide-react";
 import Link from "next/link";
 import { DeleteButtonProduct } from "./components/delete-button-product";
 
+import { fetchCategories } from "@/app/actions/categories/get-all-categories";
 import { fetchProducts } from "@/app/actions/products/get-all-products";
+import { NoResults } from "@/components/no-results";
+import { Pagination } from "@/components/pagination";
+import { CONSTANTS } from "@/utils/functions/constants";
 import dynamic from "next/dynamic";
 import { SearchProducts } from "./components/search-products";
 
@@ -19,12 +23,25 @@ const DialogDeleteProduct = dynamic(
   { ssr: false }
 );
 
-export default async function ProductPage() {
-  const products = await fetchProducts();
+export default async function ProductPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const page = Number(searchParams.page ?? 1);
+  const query = String(searchParams.search ?? "");
+  const categoriesFilter = String(searchParams.categories ?? "");
+
+  const { categories } = await fetchCategories();
+  const { products, total } = await fetchProducts(
+    page,
+    query,
+    categoriesFilter
+  );
 
   return (
     <>
-      <SearchProducts />
+      <SearchProducts categories={categories} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold tracking-tight">Produtos</h1>
@@ -72,6 +89,15 @@ export default async function ProductPage() {
             </Card>
           ))}
         </div>
+        {!products.length && <NoResults />}
+        {total > CONSTANTS.POR_PAGES && (
+          <Pagination
+            pageIndex={page - 1}
+            perPage={CONSTANTS.POR_PAGES}
+            totalCount={total}
+            result={categories}
+          />
+        )}
         <DialogDeleteProduct />
       </main>
     </>

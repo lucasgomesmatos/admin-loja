@@ -1,24 +1,28 @@
-import { api } from '@/lib/fecth';
+import { api } from "@/lib/fecth";
 
 interface ProductsResponse {
-  id: string;
-  name: string;
-  idWoocommerce: string;
-  files: string[];
+  products: {
+    id: string;
+    name: string;
+    idWoocommerce: string;
+    files: string[];
+  }[];
+  total: number;
 }
 
 export async function fetchProducts(
   page = 1,
-  query = '',
-): Promise<ProductsResponse[]> {
-  const response = await api(`products?page=${page}&query=${query}`, {
-    cache: 'no-cache',
-    next: {
-      tags: ['products'],
-    },
-  });
+  query = "",
+  categories = ""
+): Promise<ProductsResponse> {
+  const response = await api(
+    `products?page=${page}&query=${query}&categories=${categories}`
+  );
 
-  const products = await response.json();
+  const { products, total } = await response.json();
 
-  return products;
+  return {
+    products,
+    total,
+  };
 }

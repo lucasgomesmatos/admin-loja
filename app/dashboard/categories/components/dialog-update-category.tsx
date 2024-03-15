@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchCreateCategory } from "@/app/actions/categories/create-category";
+import { fetchUpdateCategory } from "@/app/actions/categories/update-category";
 import { ButtonLoading } from "@/components/button-loading";
 import {
   Dialog,
@@ -16,18 +16,25 @@ import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { useCategoryStore } from "../store/store-category";
-import { initialStateCreateCategory } from "../utils/categories-utils";
+import {
+  formCategoryFieldsFilledOutCorrectly,
+  initialStateCreateCategory,
+} from "../utils/categories-utils";
 
-export default function DialogCreateCategory() {
+export default function DialogUpdateCategory() {
   const {
-    dialogCreateCategoryOpen,
-    openDialogCreateCategoryAction,
+    dialogUpdateCategoryOpen,
+    openDialogUpdateCategoryAction,
     addCategoryNameValueAction,
     categoryNameValue,
   } = useCategoryStore();
 
   const [state, action] = useFormState(
-    () => fetchCreateCategory(categoryNameValue!),
+    () =>
+      fetchUpdateCategory(
+        categoryNameValue!,
+        dialogUpdateCategoryOpen.categoryId!
+      ),
     initialStateCreateCategory
   );
 
@@ -36,23 +43,26 @@ export default function DialogCreateCategory() {
       toast.error(state.error);
     }
 
-    if (state.ok && dialogCreateCategoryOpen.open) {
-      toast.success(`Categoria criada com sucesso.`);
-      openDialogCreateCategoryAction();
+    if (state.ok) {
+      toast.success(`Categoria atualizada com sucesso.`);
+      openDialogUpdateCategoryAction(null, null);
+      state.ok = false;
     }
-  }, [state, openDialogCreateCategoryAction, dialogCreateCategoryOpen]);
+  }, [state, openDialogUpdateCategoryAction]);
 
-  if (!dialogCreateCategoryOpen.open) return null;
+  const disabled = formCategoryFieldsFilledOutCorrectly({
+    name: categoryNameValue!,
+  });
 
   return (
     <>
       <Dialog
-        open={dialogCreateCategoryOpen.open}
-        onOpenChange={() => openDialogCreateCategoryAction()}
+        open={dialogUpdateCategoryOpen.open}
+        onOpenChange={() => openDialogUpdateCategoryAction(null, null)}
       >
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Criar nova Categoria</DialogTitle>
+            <DialogTitle>Atualizar Categoria</DialogTitle>
           </DialogHeader>
           <DialogFooter>
             <form className="flex w-full flex-col gap-4" action={action}>
@@ -72,7 +82,9 @@ export default function DialogCreateCategory() {
                 </div>
               </div>
 
-              <ButtonLoading type="submit">Salvar</ButtonLoading>
+              <ButtonLoading disabled={disabled} type="submit">
+                Atualizar
+              </ButtonLoading>
             </form>
           </DialogFooter>
         </DialogContent>
