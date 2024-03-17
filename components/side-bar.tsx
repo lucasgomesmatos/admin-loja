@@ -79,7 +79,7 @@ export async function SideBar() {
               <Home className="h-4 w-4" />
               Home
             </NavLink>
-            <NavLink href="#">
+            <NavLink href="/dashboard/users">
               <Users className="h-4 w-4" />
               Usuários
             </NavLink>
