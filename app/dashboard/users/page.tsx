@@ -13,7 +13,9 @@ import { Pagination } from "@/components/pagination";
 import { CONSTANTS } from "@/utils/functions/constants";
 import { Metadata } from "next";
 import { ButtonCreateUsers } from "./components/button-create-category";
+import { ButtonUpdateUser } from "./components/button-update-category";
 import DialogCreateUser from "./components/dialog-create-user";
+import DialogUpdateUser from "./components/dialog-update-user";
 import { SearchUsers } from "./components/search-users";
 
 export const metadata: Metadata = {
@@ -39,7 +41,7 @@ export default async function UsersPage({
 
           <ButtonCreateUsers />
         </div>
-        <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2">
+        <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2 grid-flow-row">
           {users.map((user) => (
             <Card key={user.id}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -51,24 +53,20 @@ export default async function UsersPage({
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col space-y-2 mt-8">
-                  <span className="text-xs text-muted-foreground">
-                    E-mail: {user.email}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    CPF: {user.cpf}
-                  </span>
+                  <div className="text-xs text-muted-foreground">
+                    <span className="font-bold">E-mail:</span> {user.email}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    <span className="font-bold">CPF:</span> {user.cpf}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    <span className="font-bold">Telefone:</span> {user.phone}
+                  </div>
                 </div>
               </CardContent>
 
               <CardFooter className="space-x-4">
-                {/* <ButtonUpdateCategory
-                  categoryId={category.id}
-                  name={category.name}
-                />
-                <ButtonDeleteCategory
-                  categoryId={category.id}
-                  name={category.name}
-                /> */}
+                <ButtonUpdateUser userId={user.id} user={user} />
               </CardFooter>
             </Card>
           ))}
@@ -83,6 +81,7 @@ export default async function UsersPage({
           />
         )}
         <DialogCreateUser />
+        <DialogUpdateUser />
       </main>
     </>
   );

@@ -1,3 +1,4 @@
+import { User } from "@/utils/types/user";
 import { create } from "zustand";
 
 interface UserStoreState {
@@ -6,7 +7,6 @@ interface UserStoreState {
   };
   dialogUpdateUserOpen: {
     open: boolean;
-    nameUser: string | null;
     userId: string | null;
   };
   dialogDeleteUserOpen: {
@@ -18,12 +18,13 @@ interface UserStoreState {
   userNameValue: string | null;
   userEmailValue: string | null;
   userCpfValue: string | null;
+  userPhoneValue: string | null;
 }
 
 interface UserStoreActions {
   openDialogCreateUserAction: (open: boolean) => void;
   openDialogUpdateUserAction: (
-    nameUser: string | null,
+    user: User | null,
     userId: string | null
   ) => void;
   openDialogDeleteUserAction: (
@@ -33,6 +34,8 @@ interface UserStoreActions {
   addUserNameValueAction: (nameValue: string) => void;
   addUserEmailValueAction: (emailValue: string) => void;
   addUserCpfValueAction: (cpfValue: string) => void;
+  addUserPhoneValueAction: (phoneValue: string) => void;
+  reset: () => void;
 }
 
 export const useUserStore = create<UserStoreState & UserStoreActions>(
@@ -49,6 +52,7 @@ export const useUserStore = create<UserStoreState & UserStoreActions>(
     userNameValue: null,
     userEmailValue: null,
     userCpfValue: null,
+    userPhoneValue: null,
 
     dialogDeleteUserOpen: {
       open: false,
@@ -64,16 +68,20 @@ export const useUserStore = create<UserStoreState & UserStoreActions>(
       });
     },
 
-    openDialogUpdateUserAction: (nameUser, userId) => {
+    openDialogUpdateUserAction: (user, userId) => {
       set((state) => ({
         dialogUpdateUserOpen: {
           open: !state.dialogUpdateUserOpen.open,
-          nameUser: nameUser,
           userId: userId,
         },
       }));
 
-      set({ userNameValue: nameUser });
+      set({
+        userNameValue: user?.name,
+        userEmailValue: user?.email,
+        userCpfValue: user?.cpf,
+        userPhoneValue: user?.phone,
+      });
     },
     openDialogDeleteUserAction: (nameUser, userId) => {
       set((state) => ({
@@ -97,6 +105,23 @@ export const useUserStore = create<UserStoreState & UserStoreActions>(
         .replace(/\D/g, "")
         .replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
       set({ userCpfValue: newCpfValue });
+    },
+    addUserPhoneValueAction: (phoneValue) => {
+      if (phoneValue.length > 15) return;
+
+      const newPhoneValue = phoneValue
+        .replace(/\D/g, "")
+        .replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+      set({ userPhoneValue: newPhoneValue });
+    },
+
+    reset: () => {
+      set({
+        userNameValue: null,
+        userEmailValue: null,
+        userCpfValue: null,
+        userPhoneValue: null,
+      });
     },
   })
 );

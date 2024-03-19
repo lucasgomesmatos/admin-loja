@@ -4,22 +4,22 @@ import { api } from "@/lib/fecth";
 import { apiError } from "@/utils/functions/api-error";
 import { revalidatePath } from "next/cache";
 
-interface FetchCreateUser {
+interface FetchUpdateUser {
   name: string;
   email: string;
   cpf: string;
   phone: string;
 }
 
-export async function fetchCreateUser({
+export async function fetchUpdateUser({
   name,
   email,
   cpf,
   phone,
-}: FetchCreateUser) {
+}: FetchUpdateUser) {
   try {
     const response = await api("users", {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -32,7 +32,7 @@ export async function fetchCreateUser({
     });
 
     if (!response.ok) {
-      throw new Error("Erro ao criar usuário");
+      throw new Error("Erro ao atualizar usuário");
     }
 
     revalidatePath("/users");

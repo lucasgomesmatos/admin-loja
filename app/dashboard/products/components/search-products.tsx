@@ -113,7 +113,7 @@ export const SearchProducts = ({ categories }: SearchProductsProps) => {
         </form>
         <div>
           <DropdownMenu>
-            <div className="flex h-[60px] items-center border-b px-6">
+            <div className="flex h-[60px] items-center  px-6">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button

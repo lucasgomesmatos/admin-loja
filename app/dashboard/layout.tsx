@@ -6,9 +6,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <section className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
+    <section className="grid min-h-screen w-full ">
       <SideBar />
-      <div className="flex flex-col">{children}</div>
+      <div className="flex flex-col lg:ml-[270px]">{children}</div>
     </section>
   );
 }

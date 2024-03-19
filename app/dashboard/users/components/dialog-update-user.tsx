@@ -15,17 +15,17 @@ import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
 
-import { fetchCreateUser } from "@/app/actions/users/create-user";
+import { fetchUpdateUser } from "@/app/actions/users/update-user";
 import { useUserStore } from "../store/store-user";
 import {
   formUsersFieldsFilledOutCorrectly,
   initialStateCreateUsers,
 } from "../utils/users-utils";
 
-export default function DialogCreateUser() {
+export default function DialogUpdateUser() {
   const {
-    dialogCreateUserOpen,
-    openDialogCreateUserAction,
+    dialogUpdateUserOpen,
+    openDialogUpdateUserAction,
     addUserNameValueAction,
     userNameValue,
     addUserCpfValueAction,
@@ -34,12 +34,11 @@ export default function DialogCreateUser() {
     userEmailValue,
     userPhoneValue,
     addUserPhoneValueAction,
-    reset,
   } = useUserStore();
 
   const [state, action] = useFormState(
     () =>
-      fetchCreateUser({
+      fetchUpdateUser({
         name: userNameValue!,
         email: userEmailValue!,
         cpf: userCpfValue!,
@@ -55,11 +54,10 @@ export default function DialogCreateUser() {
 
     if (state.ok) {
       toast.success(`Usuário criada com sucesso.`);
-      openDialogCreateUserAction(false);
-      reset();
+      openDialogUpdateUserAction(null, null);
       state.ok = false;
     }
-  }, [state, openDialogCreateUserAction, dialogCreateUserOpen, reset]);
+  }, [state, openDialogUpdateUserAction]);
 
   const disabled = formUsersFieldsFilledOutCorrectly({
     name: userNameValue!,
@@ -71,8 +69,8 @@ export default function DialogCreateUser() {
   return (
     <>
       <Dialog
-        open={dialogCreateUserOpen.open}
-        onOpenChange={() => openDialogCreateUserAction(false)}
+        open={dialogUpdateUserOpen.open}
+        onOpenChange={() => openDialogUpdateUserAction(null, null)}
       >
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>

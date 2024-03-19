@@ -1,6 +1,5 @@
 import { api } from "@/lib/fecth";
 import {
-  Building,
   ChevronDown,
   Home,
   Layers2,
@@ -14,7 +13,6 @@ import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -43,7 +41,7 @@ export async function SideBar() {
   const { name, email } = await fetchProfile();
 
   return (
-    <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
+    <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40 fixed h-screen">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-[60px] items-center border-b px-6">
           <DropdownMenu>
@@ -65,10 +63,7 @@ export async function SideBar() {
                 </span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
-                <Building className="mr-2 h-4 w-4" />
-                <span>Perfil da loja</span>
-              </DropdownMenuItem>
+
               <ButtonLogout />
             </DropdownMenuContent>
           </DropdownMenu>
