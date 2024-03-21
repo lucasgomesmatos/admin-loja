@@ -1,35 +1,35 @@
-'use server';
+"use server";
 
-import { environment } from '@/lib/env';
-import { apiError } from '@/utils/functions/api-error';
-import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
+import { environment } from "@/lib/env";
+import { apiError } from "@/utils/functions/api-error";
+import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 export async function fetchDeleteProduct(productId: string | null) {
-  const token = cookies().get('token')?.value;
+  const token = cookies().get("session")?.value;
 
   try {
     const response = await fetch(
       `${environment.NEXT_PUBLIC_API_BASE_URL}/products/${productId}`,
       {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
     if (!response.ok) {
-      throw new Error('Erro ao excluir produto ');
+      throw new Error("Erro ao excluir produto ");
     }
 
-    revalidatePath('/products');
+    revalidatePath("/products");
 
     return {
       data: null,
       ok: true,
-      error: '',
+      error: "",
     };
   } catch (error: unknown) {
     if (error instanceof Error) {

@@ -1,4 +1,4 @@
-import { api } from "@/lib/fecth";
+import { fetchProfile } from "@/app/actions/auth/me";
 import {
   ChevronDown,
   Home,
@@ -18,27 +18,8 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-interface SideBarProps {
-  name: string;
-  email: string;
-}
-
-interface UserProps {
-  id: string;
-  name: string;
-  email: string;
-  cpf: string;
-}
-
-async function fetchProfile(): Promise<UserProps> {
-  const response = await api("me");
-  const profile = await response.json();
-
-  return profile;
-}
-
 export async function SideBar() {
-  const { name, email } = await fetchProfile();
+  const { name, email, role } = await fetchProfile();
 
   return (
     <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40 fixed h-screen">
@@ -70,24 +51,34 @@ export async function SideBar() {
         </div>
         <div className="flex-1 overflow-auto py-2">
           <nav className="grid items-start px-4 text-sm font-medium">
-            <NavLink href="/dashboard/home">
-              <Home className="h-4 w-4" />
-              Home
-            </NavLink>
-            <NavLink href="/dashboard/users">
-              <Users className="h-4 w-4" />
-              Usuários
-            </NavLink>
+            {role === "ADMIN" && (
+              <>
+                <NavLink href="/dashboard/home">
+                  <Home className="h-4 w-4" />
+                  Home
+                </NavLink>
+                <NavLink href="/dashboard/users">
+                  <Users className="h-4 w-4" />
+                  Usuários
+                </NavLink>
 
-            <NavLink href="/dashboard/categories">
-              <Layers2 className="h-4 w-4" />
-              Categorias
-            </NavLink>
+                <NavLink href="/dashboard/categories">
+                  <Layers2 className="h-4 w-4" />
+                  Categorias
+                </NavLink>
 
-            <NavLink href="/dashboard/products">
-              <ScanBarcode className="h-4 w-4" />
-              Produtos
-            </NavLink>
+                <NavLink href="/dashboard/products">
+                  <ScanBarcode className="h-4 w-4" />
+                  Produtos
+                </NavLink>
+              </>
+            )}
+            {role === "MEMBER" && (
+              <NavLink href="/dashboard/orders">
+                <ScanBarcode className="h-4 w-4" />
+                Pedidos
+              </NavLink>
+            )}
           </nav>
         </div>
       </div>

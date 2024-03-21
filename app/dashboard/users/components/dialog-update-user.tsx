@@ -39,6 +39,7 @@ export default function DialogUpdateUser() {
   const [state, action] = useFormState(
     () =>
       fetchUpdateUser({
+        userId: dialogUpdateUserOpen.userId!,
         name: userNameValue!,
         email: userEmailValue!,
         cpf: userCpfValue!,

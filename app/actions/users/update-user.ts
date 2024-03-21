@@ -5,6 +5,7 @@ import { apiError } from "@/utils/functions/api-error";
 import { revalidatePath } from "next/cache";
 
 interface FetchUpdateUser {
+  userId: string;
   name: string;
   email: string;
   cpf: string;
@@ -12,13 +13,14 @@ interface FetchUpdateUser {
 }
 
 export async function fetchUpdateUser({
+  userId,
   name,
   email,
   cpf,
   phone,
 }: FetchUpdateUser) {
   try {
-    const response = await api("users", {
+    const response = await api(`users/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

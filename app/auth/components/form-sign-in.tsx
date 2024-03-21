@@ -1,26 +1,28 @@
-'use client';
+"use client";
 
-import { signInUserAction } from '@/app/actions/auth/sign-in';
-import { ButtonLoading } from '@/components/button-loading';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Eye, EyeOff } from 'lucide-react';
+import { signInUserAction } from "@/app/actions/auth/sign-in";
+import { ButtonLoading } from "@/components/button-loading";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Eye, EyeOff } from "lucide-react";
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useFormState } from 'react-dom';
-import { toast } from 'sonner';
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "sonner";
 
 const initialState = {
   data: null,
   ok: false,
-  error: '',
+  error: "",
 };
 
 export const FormSignIn = () => {
   const [state, action] = useFormState(signInUserAction, initialState);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
+
+  const email = useSearchParams().get("email");
 
   const { replace } = useRouter();
 
@@ -30,7 +32,7 @@ export const FormSignIn = () => {
     }
 
     if (state.ok) {
-      replace('/dashboard/home');
+      replace("/dashboard/home");
     }
   }, [state, replace]);
 
@@ -44,6 +46,7 @@ export const FormSignIn = () => {
             className=" data-[error=true]:border-red-500"
             name="email"
             placeholder="admin@example.com"
+            defaultValue={email ?? ""}
             required
             type="email"
           />
@@ -57,7 +60,7 @@ export const FormSignIn = () => {
               className=" data-[error=true]:border-red-500 appearance-none pr-8 "
               name="password"
               required
-              type={passwordVisibility ? 'password' : 'text'}
+              type={passwordVisibility ? "password" : "text"}
             />
             {passwordVisibility ? (
               <Eye

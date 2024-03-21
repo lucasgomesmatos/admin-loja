@@ -95,7 +95,7 @@ export default async function ProductPage({
             pageIndex={page - 1}
             perPage={CONSTANTS.POR_PAGES}
             totalCount={total}
-            result={categories}
+            result={products}
           />
         )}
         <DialogDeleteProduct />

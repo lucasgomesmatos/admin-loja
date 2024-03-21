@@ -1,5 +1,5 @@
 export const apiError = (
-  error: unknown,
+  error: unknown
 ): {
   data: null;
   ok: false;
@@ -15,7 +15,7 @@ export const apiError = (
     return {
       data: null,
       ok: false,
-      error: 'Erro desconhecido',
+      error: "Erro desconhecido",
     };
   }
 };

@@ -17,7 +17,7 @@ export async function createProductAction(state: {}, formData: FormData) {
   const file = new FormData();
   file.append("file", currentFile);
 
-  const token = cookies().get("token")?.value;
+  const token = cookies().get("session")?.value;
 
   try {
     const response = await fetch(

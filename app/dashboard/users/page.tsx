@@ -42,7 +42,7 @@ export default async function UsersPage({
           <ButtonCreateUsers />
         </div>
         <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2 grid-flow-row">
-          {users.map((user) => (
+          {users?.map((user) => (
             <Card key={user.id}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm text-ellipsis font-semibold">

@@ -17,15 +17,13 @@ export async function signInUserAction(state: {}, formData: FormData) {
       body: JSON.stringify({ email, password }),
     });
 
-    console.log(response);
-
     if (!response.ok) {
       throw new Error("Email ou senha inválidas");
     }
 
     const data = await response.json();
 
-    cookies().set("token", data.refreshToken, {
+    cookies().set("session", data.refreshToken, {
       maxAge: 60 * 60 * 24 * 7,
       path: "/",
       httpOnly: true,
