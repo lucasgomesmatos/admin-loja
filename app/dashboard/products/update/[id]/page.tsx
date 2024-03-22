@@ -43,7 +43,7 @@ export default async function UpdatePage({
 
   return (
     <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-6 ">
-      <div className="flex gap-6 ">
+      <div className="flex gap-6 items-center">
         <Link href="/dashboard/products">
           <Button variant="outline" className="flex gap-2 items-center">
             <ArrowLeft className="size-4" /> Voltar

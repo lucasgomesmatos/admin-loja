@@ -47,7 +47,8 @@ export default async function ProductPage({
           <h1 className="text-2xl font-bold tracking-tight">Produtos</h1>
           <Link href="/dashboard/products/register">
             <Button className="flex gap-2 items-center">
-              <Plus className="size-4" /> CRIAR NOVO PRODUTO
+              <Plus className="size-4" />{" "}
+              <span className="hidden md:block">CRIAR NOVO PRODUTO</span>
             </Button>
           </Link>
         </div>

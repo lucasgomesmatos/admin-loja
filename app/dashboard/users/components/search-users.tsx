@@ -35,7 +35,7 @@ export const SearchUsers = () => {
   }, [handleSearchAndPagination]);
 
   return (
-    <header className="flex w-full h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-8 dark:bg-gray-800/40">
+    <header className="flex w-full h-14  items-center gap-4 border-b px-6">
       <div className="w-full flex items-center justify-between">
         <form className="w-96 ">
           <div className="relative">

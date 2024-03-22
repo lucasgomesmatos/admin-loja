@@ -7,6 +7,7 @@ import { Pagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import { CONSTANTS } from "@/utils/functions/constants";
 import Link from "next/link";
+import { SearchProductsOrders } from "./components/search-products";
 
 export default async function OrdersPage({
   searchParams,
@@ -20,7 +21,7 @@ export default async function OrdersPage({
 
   return (
     <>
-      {/* <SearchProducts categories={categories} /> */}
+      <SearchProductsOrders />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold tracking-tight">Pedidos</h1>

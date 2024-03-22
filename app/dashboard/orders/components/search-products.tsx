@@ -6,7 +6,7 @@ import { Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-export const SearchCategories = () => {
+export const SearchProductsOrders = () => {
   const { push } = useRouter();
   const pathname = usePathname();
   const search = useSearchParams();

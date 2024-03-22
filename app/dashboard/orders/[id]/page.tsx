@@ -33,22 +33,24 @@ export default async function FilePage({
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-      <div className="flex gap-6 ">
+      <div className="flex gap-6 items-center">
         <Link href="/dashboard/orders">
           <Button variant="outline" className="flex gap-2 items-center">
             <ArrowLeft className="size-4" /> Voltar
           </Button>
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight">
-          {searchParams.name}:{" "}
-          <span className="font-medium text-xl">Arquivos</span>
+        <h1 className="text-xl font-bold tracking-tight">
+          {searchParams.name} -
+          <span className="font-medium text-xl">
+            {files.length > 1 ? ` Arquivos` : ` Arquivo`}
+          </span>
         </h1>
       </div>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2">
         {files.map((file) => (
           <Card key={file.id}>
             <CardHeader className="flex flex-1 flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-semibold">
+              <CardTitle className="text-xs font-semibold text-wrap text-clip w-[90%]">
                 {file.name}
               </CardTitle>
               <FileText className="size-5 text-muted-foreground" />

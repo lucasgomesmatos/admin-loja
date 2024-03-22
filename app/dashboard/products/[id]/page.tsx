@@ -29,7 +29,7 @@ export default async function FilePage({
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-      <div className="flex gap-6 ">
+      <div className="flex gap-6 items-center">
         <Link href="/dashboard/products">
           <Button variant="outline" className="flex gap-2 items-center">
             <ArrowLeft className="size-4" /> Voltar
@@ -40,7 +40,7 @@ export default async function FilePage({
           <span className="font-medium text-xl">Arquivos</span>
         </h1>
       </div>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2">
         {files.map((file) => (
           <Card key={file.id}>
             <CardHeader className="flex flex-1 flex-row items-center justify-between space-y-0 pb-2">

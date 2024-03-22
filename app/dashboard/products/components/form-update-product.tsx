@@ -144,7 +144,7 @@ export default function FormUpdateProduct({
   };
 
   return (
-    <form action={onSubmit} className="grid grid-cols-2 gap-8 max-w-[880px]">
+    <form action={onSubmit} className="grid md:grid-cols-2 gap-8 max-w-[880px]">
       <div className="space-y-2">
         <div className=" space-y-1">
           <Label>Nome do produto</Label>

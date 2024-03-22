@@ -1,4 +1,4 @@
-import { SideBar } from "@/components/side-bar";
+import Sidebar from "@/components/sidebar";
 
 export default async function RootLayout({
   children,
@@ -6,9 +6,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <section className="grid min-h-screen w-full ">
-      <SideBar />
-      <div className="flex flex-col lg:ml-[270px]">{children}</div>
+    <section className="flex flex-col">
+      <Sidebar />
+      <div className="flex flex-col ">{children}</div>
     </section>
   );
 }
