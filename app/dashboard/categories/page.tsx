@@ -38,7 +38,7 @@ export default async function CategoriesPage({
           <ButtonCreateCategory />
         </div>
         <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2">
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <Card key={category.id}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm text-ellipsis font-semibold">
@@ -60,7 +60,7 @@ export default async function CategoriesPage({
             </Card>
           ))}
         </div>
-        {!categories.length && <NoResults />}
+        {!categories?.length && <NoResults />}
         {total > CONSTANTS.POR_PAGES && (
           <Pagination
             pageIndex={page - 1}

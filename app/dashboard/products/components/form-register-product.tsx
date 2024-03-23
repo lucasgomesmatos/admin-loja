@@ -40,7 +40,7 @@ export default function FormRegisterProduct({
 
   const handleOptionCheckboxes = (id: string) => {
     setCheckboxes(
-      checkboxes.map((checkbox) => {
+      checkboxes?.map((checkbox) => {
         if (checkbox.id === id) {
           return {
             ...checkbox,
@@ -138,7 +138,7 @@ export default function FormRegisterProduct({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[420px]">
-                {checkboxes.map((checkbox) => (
+                {checkboxes?.map((checkbox) => (
                   <DropdownMenuCheckboxItem
                     onCheckedChange={() => handleOptionCheckboxes(checkbox.id)}
                     checked={checkbox.checked}

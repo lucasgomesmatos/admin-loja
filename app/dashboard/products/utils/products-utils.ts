@@ -44,7 +44,7 @@ export const formFieldsFilledOutCorrectly = ({
   files: File[];
   checkboxes: Checkboxes[];
 }) => {
-  const checkboxesChecked = checkboxes.some((checkbox) => checkbox.checked);
+  const checkboxesChecked = checkboxes?.some((checkbox) => checkbox.checked);
 
   const disabled =
     Boolean(name?.length) &&
@@ -128,7 +128,7 @@ export const generateCheckbox = ({
   checked?: boolean;
   categoriesChecked?: Category[];
 }) => {
-  return categories.map((category) => {
+  return categories?.map((category) => {
     const categoryEqual = categoriesChecked?.find(
       (item) => item.id === category.id
     );

@@ -53,7 +53,7 @@ export default async function ProductPage({
           </Link>
         </div>
         <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2">
-          {products.map((product) => (
+          {products?.map((product) => (
             <Card key={product.id}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm text-ellipsis font-semibold">
@@ -90,7 +90,7 @@ export default async function ProductPage({
             </Card>
           ))}
         </div>
-        {!products.length && <NoResults />}
+        {!products?.length && <NoResults />}
         {total > CONSTANTS.POR_PAGES && (
           <Pagination
             pageIndex={page - 1}

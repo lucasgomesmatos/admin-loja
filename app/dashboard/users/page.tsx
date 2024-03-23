@@ -37,7 +37,7 @@ export default async function UsersPage({
       <SearchUsers />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 ">
         <div className="flex justify-between items-center">
-          <h1 className="text-xl font-bold tracking-tight">Usuários</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Usuários</h1>
 
           <ButtonCreateUsers />
         </div>
@@ -71,7 +71,7 @@ export default async function UsersPage({
             </Card>
           ))}
         </div>
-        {!users.length && <NoResults />}
+        {!users?.length && <NoResults />}
         {total > CONSTANTS.POR_PAGES && (
           <Pagination
             pageIndex={page - 1}

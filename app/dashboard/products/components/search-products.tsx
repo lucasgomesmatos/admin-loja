@@ -39,12 +39,12 @@ export const SearchProducts = ({ categories }: SearchProductsProps) => {
   );
 
   const handleAllCheckboxesChecked = () => {
-    const allCheckboxesChecked = checkboxes.every(
+    const allCheckboxesChecked = checkboxes?.every(
       (checkbox) => checkbox.checked
     );
 
     setCheckboxes(
-      checkboxes.map((checkbox) => {
+      checkboxes?.map((checkbox) => {
         return {
           ...checkbox,
           checked: !allCheckboxesChecked,
@@ -55,7 +55,7 @@ export const SearchProducts = ({ categories }: SearchProductsProps) => {
 
   const handleOptionCheckboxes = (id: string) => {
     setCheckboxes(
-      checkboxes.map((checkbox) => {
+      checkboxes?.map((checkbox) => {
         if (checkbox.id === id) {
           return {
             ...checkbox,
@@ -67,7 +67,7 @@ export const SearchProducts = ({ categories }: SearchProductsProps) => {
     );
   };
 
-  const allCheckboxes = checkboxes.every((checkbox) => checkbox.checked);
+  const allCheckboxes = checkboxes?.every((checkbox) => checkbox.checked);
 
   const handleSearchAndPagination = useCallback(() => {
     let path = pathname;
@@ -135,7 +135,7 @@ export const SearchProducts = ({ categories }: SearchProductsProps) => {
                   >
                     Todas
                   </DropdownMenuCheckboxItem>
-                  {checkboxes.map((checkbox) => (
+                  {checkboxes?.map((checkbox) => (
                     <DropdownMenuCheckboxItem
                       onCheckedChange={() =>
                         handleOptionCheckboxes(checkbox.id)
