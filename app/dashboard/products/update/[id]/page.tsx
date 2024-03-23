@@ -7,6 +7,7 @@ import { api } from "@/lib/fecth";
 import { Category } from "@/utils/types/category";
 import { FileContent } from "@/utils/types/file-content";
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 const FormUpdateProduct = dynamic(
   () => import("@/app/dashboard/products/components/form-update-product"),
   { ssr: false }
@@ -54,11 +55,13 @@ export default async function UpdatePage({
         </h1>
       </div>
 
-      <FormUpdateProduct
-        files={files}
-        categories={categories}
-        categoriesChecked={categoriesProduct}
-      />
+      <Suspense>
+        <FormUpdateProduct
+          files={files}
+          categories={categories}
+          categoriesChecked={categoriesProduct}
+        />
+      </Suspense>
     </main>
   );
 }

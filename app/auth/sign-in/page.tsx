@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Library } from "lucide-react";
 import { Metadata } from "next";
+import { Suspense } from "react";
 import { FormSignIn } from "../components/form-sign-in";
 
 export const metadata: Metadata = {
@@ -26,7 +27,9 @@ export default function SignIn() {
           </CardDescription>
         </CardHeader>
         <CardContent className="w-96">
-          <FormSignIn />
+          <Suspense>
+            <FormSignIn />
+          </Suspense>
         </CardContent>
       </Card>
     </main>

@@ -1,6 +1,6 @@
 "use client";
 
-import { signInUserMemberAction } from "@/app/actions/auth/sign-in-member";
+import { signInUserMemberAction } from "@/app/actions/auth/auth-sign-in-member";
 import { ButtonLoading } from "@/components/button-loading";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

@@ -1,6 +1,6 @@
 "use client";
 
-import { signInUserAction } from "@/app/actions/auth/sign-in";
+import { signInUserAction } from "@/app/actions/auth/auth-sign-in";
 import { ButtonLoading } from "@/components/button-loading";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

@@ -6,6 +6,7 @@ import { NoResults } from "@/components/no-results";
 import { Pagination } from "@/components/pagination";
 import { CONSTANTS } from "@/utils/functions/constants";
 import { Metadata } from "next";
+import { Suspense } from "react";
 import { ButtonCreateCategory } from "./components/button-create-category";
 import { ButtonDeleteCategory } from "./components/button-delete-category";
 import { ButtonUpdateCategory } from "./components/button-update-category";
@@ -30,7 +31,9 @@ export default async function CategoriesPage({
 
   return (
     <>
-      <SearchCategories />
+      <Suspense>
+        <SearchCategories />
+      </Suspense>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 ">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold tracking-tight">Categorias</h1>

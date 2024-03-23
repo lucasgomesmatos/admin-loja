@@ -12,6 +12,7 @@ import { NoResults } from "@/components/no-results";
 import { Pagination } from "@/components/pagination";
 import { CONSTANTS } from "@/utils/functions/constants";
 import { Metadata } from "next";
+import { Suspense } from "react";
 import { ButtonCreateUsers } from "./components/button-create-category";
 import { ButtonUpdateUser } from "./components/button-update-category";
 import DialogCreateUser from "./components/dialog-create-user";
@@ -34,7 +35,9 @@ export default async function UsersPage({
 
   return (
     <>
-      <SearchUsers />
+      <Suspense>
+        <SearchUsers />
+      </Suspense>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 ">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold tracking-tight">Usuários</h1>
