@@ -6,7 +6,11 @@ export async function GET(request: NextRequest) {
   const token = searchParams.get("token");
 
   if (!token) {
-    return NextResponse.redirect("/auth/sign-in-member");
+    const redirectURL = new URL(
+      "https://admin.profbiodicas.com.br/auth/sign-in-member"
+    );
+
+    return NextResponse.redirect(redirectURL);
   }
 
   cookies().set("session", token, {
@@ -17,7 +21,9 @@ export async function GET(request: NextRequest) {
     sameSite: "lax",
   });
 
-  const redirectURL = new URL("/dashboard/orders", request.url);
+  const redirectURL = new URL(
+    "https://admin.profbiodicas.com.br/dashboard/orders"
+  );
 
   return NextResponse.redirect(redirectURL);
 }
