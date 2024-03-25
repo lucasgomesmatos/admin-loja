@@ -3,7 +3,7 @@
 import { api } from "@/lib/fecth";
 import { apiError } from "@/utils/functions/api-error";
 
-import { createSessionLoginAdmin } from "./token";
+import { createSessionLogin } from "./token";
 
 export async function signInUserMemberAction(state: {}, formData: FormData) {
   const email = formData.get("email") as string;
@@ -23,7 +23,7 @@ export async function signInUserMemberAction(state: {}, formData: FormData) {
 
     const data = await response.json();
 
-    await createSessionLoginAdmin("auth", data.refreshToken, email);
+    await createSessionLogin("auth", data.refreshToken, email);
 
     return {
       data: null,

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Login",
 };
 
-export default function SignInMember() {
+export default async function SignInMember() {
   return (
     <main className="flex h-screen justify-center items-center px-5">
       <Card className="mx-auto max-w-sm space-y-2">

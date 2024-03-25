@@ -15,8 +15,6 @@ const initialState = {
   data: null,
   ok: false,
   error: "",
-  isAdmin: false,
-  email: "",
 };
 
 export const FormSignInMember = () => {
@@ -25,7 +23,7 @@ export const FormSignInMember = () => {
   const { replace } = useRouter();
 
   useEffect(() => {
-    if (state.error.length) {
+    if (state?.error?.length) {
       toast.error(state.error);
     }
 
@@ -40,7 +38,6 @@ export const FormSignInMember = () => {
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
-            data-error={Boolean(state.error.length)}
             className=" data-[error=true]:border-red-500"
             name="email"
             placeholder="admin@exemplo.com"

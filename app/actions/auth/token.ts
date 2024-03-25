@@ -10,7 +10,7 @@ export async function openSessionToken(token: string) {
   return payload;
 }
 
-export async function createSessionLoginAdmin(
+export async function createSessionLogin(
   name: string,
   token: string,
   email?: string
