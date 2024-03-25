@@ -17,7 +17,5 @@ export async function GET(request: NextRequest) {
     sameSite: "lax",
   });
 
-  const redirectURL = new URL("/dashboard/orders", request.url);
-
-  return NextResponse.redirect(redirectURL);
+  return NextResponse.redirect("/dashboard/orders");
 }
