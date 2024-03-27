@@ -49,7 +49,8 @@ export const FormSignInMember = () => {
         <ButtonLoading>Entrar</ButtonLoading>
         <Link
           className="inline-block w-full text-center text-sm underline"
-          href="#"
+          href="https://api.whatsapp.com/send?phone=5531997434248&text=Preciso%20de%20ajuda?"
+          target="_blank"
         >
           Precisa de ajuda?
         </Link>
