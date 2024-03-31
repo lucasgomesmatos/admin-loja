@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { openSessionToken, verifyToken } from "./utils/functions/verify-token";
 
-const publicRoutes = ["/auth/sign-in-member", "/auth/sign-in"];
-
-const privateRoutes = [
-  "/dashboard/home",
-  "/dashboard/orders",
-  "/dashboard/products",
-  "/dashboard/users",
-  "dashboard/categories",
+const publicRoutes = [
+  "/auth/sign-in-member",
+  "/auth/sign-in",
+  "/auth/forgot-password",
+  "/auth/reset-password",
 ];
 
 export async function middleware(request: NextRequest) {
@@ -28,6 +25,14 @@ export async function middleware(request: NextRequest) {
 
   if (authenticated && !request.nextUrl.pathname.startsWith("/dashboard")) {
     return Response.redirect(new URL("/dashboard/home", request.url));
+  }
+
+  if (
+    adminAuthenticated &&
+    (request.nextUrl.pathname.startsWith("/auth/forgot-password") ||
+      request.nextUrl.pathname.startsWith("/auth/reset-password"))
+  ) {
+    return NextResponse.next();
   }
 
   if (

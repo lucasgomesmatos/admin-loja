@@ -5,8 +5,8 @@ import { ButtonLoading } from "@/components/button-loading";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
-
 import Link from "next/link";
+
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
@@ -37,7 +37,7 @@ export const FormSignIn = () => {
   }, [state, replace]);
 
   return (
-    <>
+    <div>
       <form action={action} className="space-y-4 ">
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
@@ -77,13 +77,18 @@ export const FormSignIn = () => {
         </div>
 
         <ButtonLoading>Entrar</ButtonLoading>
-        <Link
-          className="inline-block w-full text-center text-sm underline"
-          href="#"
-        >
-          Esqueceu a senha?
-        </Link>
       </form>
-    </>
+
+      <Link
+        className="inline-block w-full text-center text-sm underline mt-4 "
+        href={
+          email
+            ? `/auth/forgot-password?email=${email}`
+            : "/auth/forgot-password"
+        }
+      >
+        Esqueceu a senha?
+      </Link>
+    </div>
   );
 };

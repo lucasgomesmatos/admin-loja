@@ -38,7 +38,6 @@ export const FormSignInMember = () => {
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
-            className=" data-[error=true]:border-red-500"
             name="email"
             placeholder="admin@exemplo.com"
             required

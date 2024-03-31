@@ -7,13 +7,13 @@ import {
 } from "@/components/ui/card";
 import { Library } from "lucide-react";
 import { Metadata } from "next";
-import { FormForgotPassword } from "../components/form-forgot-password";
+import { FormResetPassword } from "../components/form-reset-password";
 
 export const metadata: Metadata = {
-  title: "Esqueceu a senha",
+  title: "Recuperar Acesso",
 };
 
-export default async function ForgotPassword() {
+export default async function ResetPassword() {
   return (
     <main className="flex h-screen justify-center items-center px-5">
       <Card className="mx-auto max-w-sm space-y-2">
@@ -22,11 +22,11 @@ export default async function ForgotPassword() {
             <Library className="size-5" /> Lojinha de Atividades
           </CardTitle>
           <CardDescription className="text-gray-500 dark:text-gray-400 text-sm">
-            Digite seu e-mail abaixo para recuperar seu acesso.
+            Digite sua nova senha abaixo.
           </CardDescription>
         </CardHeader>
         <CardContent className="w-96">
-          <FormForgotPassword />
+          <FormResetPassword />
         </CardContent>
       </Card>
     </main>
