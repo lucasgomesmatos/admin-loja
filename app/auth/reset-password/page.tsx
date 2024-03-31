@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Library } from "lucide-react";
 import { Metadata } from "next";
+import { Suspense } from "react";
 import { FormResetPassword } from "../components/form-reset-password";
 
 export const metadata: Metadata = {
@@ -26,7 +27,9 @@ export default async function ResetPassword() {
           </CardDescription>
         </CardHeader>
         <CardContent className="w-96">
-          <FormResetPassword />
+          <Suspense>
+            <FormResetPassword />
+          </Suspense>
         </CardContent>
       </Card>
     </main>
