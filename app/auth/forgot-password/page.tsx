@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Library } from "lucide-react";
 import { Metadata } from "next";
+import { Suspense } from "react";
 import { FormForgotPassword } from "../components/form-forgot-password";
 
 export const metadata: Metadata = {
@@ -26,7 +27,9 @@ export default async function ForgotPassword() {
           </CardDescription>
         </CardHeader>
         <CardContent className="w-96">
-          <FormForgotPassword />
+          <Suspense>
+            <FormForgotPassword />
+          </Suspense>
         </CardContent>
       </Card>
     </main>
