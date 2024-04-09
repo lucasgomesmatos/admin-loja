@@ -81,11 +81,7 @@ export const useProductStore = create<ProductStoreState & ProductStoreActions>(
     },
 
     addProductFilesAction: (files: File[]) => {
-      set((state) => ({
-        productFiles: [
-          ...Array.from(new Set([...state.productFiles, ...files])),
-        ],
-      }));
+      set((state) => ({ productFiles: [...state.productFiles, ...files,] }));
     },
 
     removeProductFileAction: (nameFile: string) => {
@@ -106,19 +102,17 @@ export const useProductStore = create<ProductStoreState & ProductStoreActions>(
     },
 
     setProductCurrentFilesAction: (files: FileContent[]) => {
-      const setFiles = new Set(files);
-
-      set({ currentProductFiles: Array.from(setFiles) });
+      set({ currentProductFiles: files });
     },
 
     removeProductCurrentFileAction: (file: FileContent) => {
-      set((state) => ({
-        currentProductFiles: state.currentProductFiles.filter(
-          (item) => item.id !== file.id,
-        ),
+      const { currentProductFiles } = get();
 
-        productFilesDelete: [...state.productFilesDelete, file],
-      }));
+      const newFiles = currentProductFiles.filter(
+        (item) => item.id !== file.id,
+      );
+
+      set({ currentProductFiles: newFiles });
     },
 
 

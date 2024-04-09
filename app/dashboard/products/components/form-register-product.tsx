@@ -21,7 +21,8 @@ import {
 } from "../utils/products-utils";
 
 import { Button } from "@/components/ui/button";
-import { INITIAL_STATE_NOTIFICATION } from "@/utils/functions/constantes";
+
+import { INITIAL_STATE_NOTIFICATION } from "@/utils/functions/constants";
 import { Category } from "@/utils/types/category";
 
 interface FormRegisterProductProps {
@@ -31,6 +32,8 @@ interface FormRegisterProductProps {
 export default function FormRegisterProduct({
   categories,
 }: FormRegisterProductProps) {
+
+
 
   const {
     productId,
@@ -58,11 +61,13 @@ export default function FormRegisterProduct({
 
 
   useEffect(() => {
-    if (state.error.length) {
+    if (state?.error && state.error.length) {
+      state.error = null
       toast.error(state.error);
     }
     if (state.ok && productId) {
       reset();
+      state.ok = false;
       toast.success(`Produto e arquivos registrados com sucesso.`);
     }
   }, [state, productId, reset]);

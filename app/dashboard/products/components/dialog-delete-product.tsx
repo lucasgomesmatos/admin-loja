@@ -10,7 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { INITIAL_STATE_NOTIFICATION } from "@/utils/functions/constantes";
+
+import { INITIAL_STATE_NOTIFICATION } from "@/utils/functions/constants";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
@@ -26,11 +27,13 @@ export default function DialogDeleteProduct() {
   );
 
   useEffect(() => {
-    if (state.error.length) {
+    if (state.error && state.error.length) {
+      state.error = null;
       toast.error(state.error);
     }
 
     if (state.ok && dialogDeleteProductOpen.productId) {
+      state.ok = false;
       toast.success(`Produto excluído com sucesso.`);
       openDialogDeleteProductAction(null);
     }

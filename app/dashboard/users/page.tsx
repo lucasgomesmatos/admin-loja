@@ -75,10 +75,10 @@ export default async function UsersPage({
           ))}
         </div>
         {!users?.length && <NoResults />}
-        {total > CONSTANTS.POR_PAGES && (
+        {total > CONSTANTS.POR_PAGES_MAX_8 && (
           <Pagination
             pageIndex={page - 1}
-            perPage={CONSTANTS.POR_PAGES}
+            perPage={CONSTANTS.POR_PAGES_MAX_8}
             totalCount={total}
             result={users}
           />

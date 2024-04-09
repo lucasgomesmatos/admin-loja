@@ -13,15 +13,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDebounce } from "@/utils/hooks/useDebounce";
+import { Category } from "@/utils/types/category";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { generateCheckbox } from "../utils/products-utils";
 
 interface SearchProductsProps {
-  categories: {
-    id: string;
-    name: string;
-  }[];
+  categories: Category[];
 }
 
 export const SearchProducts = ({ categories }: SearchProductsProps) => {

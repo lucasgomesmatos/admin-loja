@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { INITIAL_STATE_NOTIFICATION } from "@/utils/functions/constantes";
+
+import { INITIAL_STATE_NOTIFICATION } from "@/utils/functions/constants";
 import { Category } from "@/utils/types/category";
 import { FileContent } from "@/utils/types/file-content";
 import { ChevronDown, KeyRound, Type } from "lucide-react";
@@ -88,22 +89,26 @@ export default function FormUpdateProduct({
   ]);
 
   useEffect(() => {
-    if (stateUpdate.error.length) {
+    if (stateUpdate.error && stateUpdate.error.length) {
+      stateUpdate.error = null;
       toast.error(stateUpdate.error);
     }
 
     if (stateUpdate.ok && productId) {
       replace(`/dashboard/products`);
+      stateUpdate.ok = false;
       toast.success(`Arquivos atualizados com sucesso.`);
     }
   }, [stateUpdate, productId, replace]);
 
   useEffect(() => {
-    if (state.error.length) {
+    if (state.error && state.error.length) {
+      state.error = null;
       toast.error(state.error);
     }
     if (state.ok && productId) {
       resetUpdate();
+      state.ok = false;
       replace(`/dashboard/products`);
       toast.success(`Produto e arquivos registrados com sucesso.`);
     }
@@ -119,7 +124,9 @@ export default function FormUpdateProduct({
   });
 
   const onSubmit = async (data: FormData) => {
-    if (productFiles.length) {
+    // conserta o erro de não enviar os arquivos
+    console.log(currentProductFiles.length, productFiles, productFilesDelete)
+    if (currentProductFiles.length || productFiles.length) {
       for (const file of productFiles) {
         const formData = appendFilesToFormData(data, file, checkboxes);
         await action(formData);
