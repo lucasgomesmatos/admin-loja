@@ -64,7 +64,7 @@ export default async function CategoriesPage({
           ))}
         </div>
         {!categories?.length && <NoResults />}
-        {total > CONSTANTS.POR_PAGES_MAX_16 && (
+        {Boolean(categories?.length) && total > CONSTANTS.POR_PAGES_MAX_16 && (
           <Pagination
             pageIndex={page - 1}
             perPage={CONSTANTS.POR_PAGES_MAX_16}

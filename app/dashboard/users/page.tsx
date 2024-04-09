@@ -75,7 +75,7 @@ export default async function UsersPage({
           ))}
         </div>
         {!users?.length && <NoResults />}
-        {total > CONSTANTS.POR_PAGES_MAX_8 && (
+        {Boolean(users?.length) && total > CONSTANTS.POR_PAGES_MAX_8 && (
           <Pagination
             pageIndex={page - 1}
             perPage={CONSTANTS.POR_PAGES_MAX_8}

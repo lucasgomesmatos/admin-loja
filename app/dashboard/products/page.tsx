@@ -91,7 +91,7 @@ export default async function ProductPage({
           ))}
         </div>
         {!products?.length && <NoResults />}
-        {products?.length && total > CONSTANTS.POR_PAGES_MAX_12 && (
+        {Boolean(products?.length) && total > CONSTANTS.POR_PAGES_MAX_12 && (
           <Pagination
             pageIndex={page - 1}
             perPage={CONSTANTS.POR_PAGES_MAX_12}
