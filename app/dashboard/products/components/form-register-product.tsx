@@ -62,13 +62,13 @@ export default function FormRegisterProduct({
 
   useEffect(() => {
     if (state?.error && state.error.length) {
-      state.error = null
       toast.error(state.error);
+      state.error = null
     }
     if (state.ok && productId) {
       reset();
-      state.ok = false;
       toast.success(`Produto e arquivos registrados com sucesso.`);
+      state.ok = false;
     }
   }, [state, productId, reset]);
 

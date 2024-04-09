@@ -90,14 +90,14 @@ export default function FormUpdateProduct({
 
   useEffect(() => {
     if (stateUpdate.error && stateUpdate.error.length) {
-      stateUpdate.error = null;
       toast.error(stateUpdate.error);
+      stateUpdate.error = null;
     }
 
     if (stateUpdate.ok && productId) {
       replace(`/dashboard/products`);
-      stateUpdate.ok = false;
       toast.success(`Arquivos atualizados com sucesso.`);
+      stateUpdate.ok = false;
     }
   }, [stateUpdate, productId, replace]);
 

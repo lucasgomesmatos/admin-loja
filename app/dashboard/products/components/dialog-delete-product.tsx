@@ -28,13 +28,13 @@ export default function DialogDeleteProduct() {
 
   useEffect(() => {
     if (state.error && state.error.length) {
-      state.error = null;
       toast.error(state.error);
+      state.error = null;
     }
 
     if (state.ok && dialogDeleteProductOpen.productId) {
-      state.ok = false;
       toast.success(`Produto excluído com sucesso.`);
+      state.ok = false;
       openDialogDeleteProductAction(null);
     }
   }, [state, openDialogDeleteProductAction, dialogDeleteProductOpen.productId]);
