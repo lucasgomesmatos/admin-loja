@@ -11,46 +11,26 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ChevronDown, KeyRound, Type } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { useProductStore } from "../store/store";
 import {
   appendFilesToFormData,
-  formFieldsFilledOutCorrectly,
-  generateCheckbox,
-  initialStateCreateProduct,
+  isDisabledCreateProduct
 } from "../utils/products-utils";
 
 import { Button } from "@/components/ui/button";
+import { INITIAL_STATE_NOTIFICATION } from "@/utils/functions/constantes";
+import { Category } from "@/utils/types/category";
 
 interface FormRegisterProductProps {
-  categories: {
-    id: string;
-    name: string;
-  }[];
+  categories: Category[];
 }
 
 export default function FormRegisterProduct({
   categories,
 }: FormRegisterProductProps) {
-  const [checkboxes, setCheckboxes] = useState(
-    generateCheckbox({ categories, checked: false })
-  );
-
-  const handleOptionCheckboxes = (id: string) => {
-    setCheckboxes(
-      checkboxes?.map((checkbox) => {
-        if (checkbox.id === id) {
-          return {
-            ...checkbox,
-            checked: !checkbox.checked,
-          };
-        }
-        return checkbox;
-      })
-    );
-  };
 
   const {
     productId,
@@ -59,17 +39,23 @@ export default function FormRegisterProduct({
     productFiles,
     addProductNameValueAction,
     addProductIdValueAction,
+    checkboxes,
+    generateCheckboxes,
+    addCheckboxAction,
     resetOnLoad,
   } = useProductStore();
 
   const [state, action] = useFormState(
     createProductAction,
-    initialStateCreateProduct
+    INITIAL_STATE_NOTIFICATION
   );
 
   useEffect(() => {
     resetOnLoad();
-  }, [resetOnLoad]);
+    generateCheckboxes(categories, false);
+  }, [
+    resetOnLoad, categories, generateCheckboxes,]);
+
 
   useEffect(() => {
     if (state.error.length) {
@@ -88,12 +74,13 @@ export default function FormRegisterProduct({
     }
   };
 
-  const buttonDisabled = formFieldsFilledOutCorrectly({
+  const buttonDisabled = isDisabledCreateProduct({
     name: productName!,
     id: productId!,
     files: productFiles,
     checkboxes,
-  });
+  })
+
 
   return (
     <form action={onSubmit} className="grid md:grid-cols-2 gap-8 max-w-[880px]">
@@ -140,7 +127,7 @@ export default function FormRegisterProduct({
               <DropdownMenuContent className="w-[420px]">
                 {checkboxes?.map((checkbox) => (
                   <DropdownMenuCheckboxItem
-                    onCheckedChange={() => handleOptionCheckboxes(checkbox.id)}
+                    onCheckedChange={() => addCheckboxAction(checkbox.id)}
                     checked={checkbox.checked}
                     key={checkbox.id}
                   >

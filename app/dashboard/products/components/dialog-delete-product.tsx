@@ -10,11 +10,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { INITIAL_STATE_NOTIFICATION } from "@/utils/functions/constantes";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { useProductStore } from "../store/store";
-import { initialStateCreateProduct } from "../utils/products-utils";
 
 export default function DialogDeleteProduct() {
   const { openDialogDeleteProductAction, dialogDeleteProductOpen } =
@@ -22,7 +22,7 @@ export default function DialogDeleteProduct() {
 
   const [state, action] = useFormState(
     () => fetchDeleteProduct(dialogDeleteProductOpen.productId),
-    initialStateCreateProduct
+    INITIAL_STATE_NOTIFICATION
   );
 
   useEffect(() => {

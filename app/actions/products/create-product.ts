@@ -57,6 +57,7 @@ export async function createProductAction(state: {}, formData: FormData) {
     return {
       data: null,
       ok: true,
+      success: "Produto e arquivos registrados com sucesso",
       error: "",
     };
   } catch (error: unknown) {

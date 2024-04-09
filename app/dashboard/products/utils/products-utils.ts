@@ -2,95 +2,63 @@ import { Category } from "@/utils/types/category";
 import { FileContent } from "@/utils/types/file-content";
 import { z } from "zod";
 
-export const formSchemaCreateProduct = z.object({
-  name: z
-    .string({
-      required_error: "Nome do produto é obrigatório",
-    })
-    .min(3, {
-      message: "Nome do produto deve ter no mínimo 3 caracteres",
-    }),
-  id: z
-    .string({
-      required_error: "ID Woocomerce é obrigatório",
-    })
-    .min(1, {
-      message: "ID Woocomerce é obrigatório",
-    }),
-});
-
-export type FormSchemaCreateProduct = z.infer<typeof formSchemaCreateProduct>;
-
-export const initialStateCreateProduct = {
-  data: null,
-  ok: false,
-  error: "",
-};
-
-export interface Checkboxes {
+export interface CheckboxesCategories {
   id: string;
   label: string;
   checked: boolean;
 }
 
-export const formFieldsFilledOutCorrectly = ({
-  name,
-  id,
-  files,
-  checkboxes,
-}: {
+interface IsDisabledButtonProductProps {
   name: string;
   id: string;
   files: File[];
-  checkboxes: Checkboxes[];
-}) => {
-  const checkboxesChecked = checkboxes?.some((checkbox) => checkbox.checked);
+  checkboxes: CheckboxesCategories[];
+}
 
-  const disabled =
-    Boolean(name?.length) &&
-    Boolean(id?.length) &&
-    Boolean(files?.length) &&
-    checkboxesChecked;
+export const isDisabledCreateProduct = (data: IsDisabledButtonProductProps) => {
+  const schema = z.object({
+    name: z.string().min(3),
+    id: z.string().min(3),
+    files: z.array(z.instanceof(File)).min(1),
+    checkboxes: z.array(z.object({
+      id: z.string(),
+      label: z.string(),
+      checked: z.coerce.boolean()
+    })).refine((value) => value.some((item) => item.checked))
+  })
 
-  return !disabled;
-};
-export const formFieldsFilledOutCorrectlyUpdate = ({
-  name,
-  id,
-  files,
-  filesProductDelete,
-  filesCurrent,
-  checkboxes,
-}: {
+  return !schema.safeParse(data).success;
+}
+
+interface IsDisabledUpdateProductProps {
   name: string;
   id: string;
-  files: File[];
-  filesProductDelete: FileContent[];
-  filesCurrent: FileContent[];
-  checkboxes: Checkboxes[];
-}) => {
-  const checkboxesChecked = checkboxes.some((checkbox) => checkbox.checked);
+  files: FileContent[];
+  checkboxes: CheckboxesCategories[];
+  productFiles: File[] | null;
+}
 
-  const filesLength = files.length === 0 && filesCurrent.length === 0;
 
-  if (filesLength) return true;
+export const isDisabledUpdateProduct = (data: IsDisabledUpdateProductProps) => {
+  const schema = z.object({
+    name: z.string().min(3),
+    id: z.string().min(3),
+    checkboxes: z.array(z.object({
+      id: z.string(),
+      label: z.string(),
+      checked: z.boolean()
+    })).refine((value) => value.some((item) => item.checked))
+  })
 
-  const disabledFiles =
-    Boolean(files?.length) || Boolean(filesProductDelete?.length);
+  const isLengthFiles = Boolean(data.files.length) || Boolean(data.productFiles?.length);
 
-  const disabled =
-    Boolean(name?.length) &&
-    Boolean(id?.length) &&
-    disabledFiles &&
-    checkboxesChecked;
-
-  return !disabled;
-};
+  return !Boolean(schema.safeParse(data).success && isLengthFiles)
+}
 
 export const appendFilesToFormData = (
   data: FormData,
   file: File,
-  checkboxes: Checkboxes[]
+  checkboxes: CheckboxesCategories[]
 ) => {
   const formData = new FormData();
 
@@ -112,7 +80,6 @@ export const appendFilesToFormData = (
 
 export const normalizeNumber = (value: string | undefined) => {
   if (!value) return "";
-
   return value.replace(/\D/g, "");
 };
 
@@ -121,19 +88,16 @@ export const generateCheckbox = ({
   checked = true,
   categoriesChecked,
 }: {
-  categories: {
-    id: string;
-    name: string;
-  }[];
+  categories: Category[];
   checked?: boolean;
   categoriesChecked?: Category[];
 }) => {
   return categories?.map((category) => {
-    const categoryEqual = categoriesChecked?.find(
+    const categoryIsEqual = categoriesChecked?.find(
       (item) => item.id === category.id
     );
 
-    if (categoryEqual) {
+    if (categoryIsEqual) {
       return {
         id: category.id,
         label: category.name,
@@ -148,3 +112,5 @@ export const generateCheckbox = ({
     };
   });
 };
+
+

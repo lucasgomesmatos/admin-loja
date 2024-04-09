@@ -12,27 +12,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { INITIAL_STATE_NOTIFICATION } from "@/utils/functions/constantes";
 import { Category } from "@/utils/types/category";
 import { FileContent } from "@/utils/types/file-content";
 import { ChevronDown, KeyRound, Type } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { useProductStore } from "../store/store";
 import {
   appendFilesToFormData,
-  formFieldsFilledOutCorrectlyUpdate,
-  generateCheckbox,
-  initialStateCreateProduct,
+  isDisabledUpdateProduct
 } from "../utils/products-utils";
 
 interface FormUpdateProductProps {
   files: FileContent[];
-  categories: {
-    id: string;
-    name: string;
-  }[];
+  categories: Category[];
   categoriesChecked: Category[];
 }
 
@@ -54,37 +50,29 @@ export default function FormUpdateProduct({
     addProductNameValueAction,
     addProductIdValueAction,
     productFilesDelete,
-    resetUpdate,
     currentProductFiles,
+    resetUpdate,
+    generateCheckboxes,
+    checkboxes,
+    addCheckboxAction,
+    resetOnLoad,
   } = useProductStore();
 
   const [state, action] = useFormState(
     createProductAction,
-    initialStateCreateProduct
+    INITIAL_STATE_NOTIFICATION
   );
 
   const [stateUpdate, actionDelete] = useFormState(
     () => fetchDeleteFiles(productFilesDelete),
-    initialStateCreateProduct
+    INITIAL_STATE_NOTIFICATION
   );
 
-  const [checkboxes, setCheckboxes] = useState(
-    generateCheckbox({ categories, checked: false, categoriesChecked })
-  );
+  useEffect(() => {
+    resetOnLoad();
+    generateCheckboxes(categories, false, categoriesChecked);
+  }, [resetOnLoad, generateCheckboxes, categories, categoriesChecked]);
 
-  const handleOptionCheckboxes = (id: string) => {
-    setCheckboxes(
-      checkboxes.map((checkbox) => {
-        if (checkbox.id === id) {
-          return {
-            ...checkbox,
-            checked: !checkbox.checked,
-          };
-        }
-        return checkbox;
-      })
-    );
-  };
 
   useEffect(() => {
     setProductCurrentFilesAction(files);
@@ -121,13 +109,13 @@ export default function FormUpdateProduct({
     }
   }, [state, productId, resetUpdate, replace]);
 
-  const buttonDisabled = formFieldsFilledOutCorrectlyUpdate({
+
+  const buttonDisabled = isDisabledUpdateProduct({
     name: productName!,
     id: productId!,
-    files: productFiles,
-    filesProductDelete: productFilesDelete,
-    filesCurrent: currentProductFiles,
+    files: currentProductFiles,
     checkboxes,
+    productFiles
   });
 
   const onSubmit = async (data: FormData) => {
@@ -188,7 +176,7 @@ export default function FormUpdateProduct({
               <DropdownMenuContent className="w-[420px]">
                 {checkboxes.map((checkbox) => (
                   <DropdownMenuCheckboxItem
-                    onCheckedChange={() => handleOptionCheckboxes(checkbox.id)}
+                    onCheckedChange={() => addCheckboxAction(checkbox.id)}
                     checked={checkbox.checked}
                     key={checkbox.id}
                   >

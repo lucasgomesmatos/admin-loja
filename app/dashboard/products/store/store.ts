@@ -1,5 +1,7 @@
+import { Category } from '@/utils/types/category';
 import { FileContent } from '@/utils/types/file-content';
 import { create } from 'zustand';
+import { CheckboxesCategories, generateCheckbox } from './../utils/products-utils';
 
 interface ProductStoreState {
   productId: string | null;
@@ -10,8 +12,10 @@ interface ProductStoreState {
     productId: string | null;
   };
   currentProductFiles: FileContent[];
-
   productFilesDelete: FileContent[];
+
+  checkboxes: CheckboxesCategories[],
+  categories: Category[],
 }
 
 interface ProductStoreActions {
@@ -24,13 +28,16 @@ interface ProductStoreActions {
   setProductCurrentFilesAction: (files: FileContent[]) => void;
   removeProductCurrentFileAction: (file: FileContent) => void;
 
+  generateCheckboxes: (categories: Category[], checked?: boolean, categoriesChecked?: Category[]) => void;
+  addCheckboxAction: (id: string) => void;
+
   reset: () => void;
   resetUpdate: () => void;
   resetOnLoad: () => void;
 }
 
 export const useProductStore = create<ProductStoreState & ProductStoreActions>(
-  (set) => ({
+  (set, get) => ({
     productId: null,
     productName: null,
     productFiles: [],
@@ -40,6 +47,30 @@ export const useProductStore = create<ProductStoreState & ProductStoreActions>(
     },
     currentProductFiles: [],
     productFilesDelete: [],
+
+    checkboxes: [],
+    categories: [],
+
+    generateCheckboxes(categories, checked, categoriesChecked) {
+      const checkboxes = generateCheckbox({ categories, checked, categoriesChecked });
+      set({ checkboxes });
+    },
+
+    addCheckboxAction: (id) => {
+      const { checkboxes } = get();
+
+      const newCheckboxes = checkboxes.map((checkbox) => {
+        if (checkbox.id === id) {
+          return {
+            ...checkbox,
+            checked: !checkbox.checked,
+          };
+        }
+        return checkbox;
+      })
+
+      set({ checkboxes: newCheckboxes });
+    },
 
     addProductNameValueAction: (nameValue: string) => {
       set({ productName: nameValue });
@@ -89,6 +120,8 @@ export const useProductStore = create<ProductStoreState & ProductStoreActions>(
         productFilesDelete: [...state.productFilesDelete, file],
       }));
     },
+
+
 
     reset: () => {
       set({

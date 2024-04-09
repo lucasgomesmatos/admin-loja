@@ -1,10 +1,8 @@
 import { api } from "@/lib/fecth";
+import { Category } from "@/utils/types/category";
 
 interface CategoriesResponse {
-  categories: {
-    id: string;
-    name: string;
-  }[];
+  categories: Category[];
   total: number;
 }
 
