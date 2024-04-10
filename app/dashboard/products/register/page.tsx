@@ -4,10 +4,17 @@ import Link from "next/link";
 
 import { fetchCategories } from "@/app/actions/categories/get-all-categories";
 import dynamic from "next/dynamic";
-const FormRegisterProduct = dynamic(
-  () => import("@/app/dashboard/products/components/form-register-product"),
+// const FormRegisterProduct = dynamic(
+//   () => import("@/app/dashboard/products/components/form-register-product"),
+//   { ssr: false }
+// );
+
+const FormRegisterProductUploadFiles = dynamic(
+  () =>
+    import("@/app/dashboard/products/components/form-register-product-upload-file"),
   { ssr: false }
 );
+
 export default async function RegisterProduct() {
   const { categories } = await fetchCategories();
 
@@ -24,7 +31,8 @@ export default async function RegisterProduct() {
         </h1>
       </div>
 
-      <FormRegisterProduct categories={categories} />
+      {/* <FormRegisterProduct categories={categories} /> */}
+      <FormRegisterProductUploadFiles categories={categories} />
     </main>
   );
 }

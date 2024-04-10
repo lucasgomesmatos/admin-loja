@@ -5,6 +5,7 @@ import { CheckboxesCategories, generateCheckbox } from './../utils/products-util
 
 interface ProductStoreState {
   productId: string | null;
+  woocommerceId: string | null;
   productName: string | null;
   productFiles: File[];
   dialogDeleteProductOpen: {
@@ -21,6 +22,7 @@ interface ProductStoreState {
 interface ProductStoreActions {
   addProductNameValueAction: (nameValue: string) => void;
   addProductIdValueAction: (idValue: string) => void;
+  addProductWoocommerceIdValueAction: (idValue: string) => void;
   addProductFilesAction: (files: File[]) => void;
   removeProductFileAction: (nameFile: string) => void;
   openDialogDeleteProductAction: (productId: string | null) => void;
@@ -39,6 +41,7 @@ interface ProductStoreActions {
 export const useProductStore = create<ProductStoreState & ProductStoreActions>(
   (set, get) => ({
     productId: null,
+    woocommerceId: null,
     productName: null,
     productFiles: [],
     dialogDeleteProductOpen: {
@@ -78,6 +81,10 @@ export const useProductStore = create<ProductStoreState & ProductStoreActions>(
 
     addProductIdValueAction: (idValue: string) => {
       set({ productId: idValue.replace(/\D/g, '') });
+    },
+
+    addProductWoocommerceIdValueAction: (idValue: string) => {
+      set({ woocommerceId: idValue.replace(/\D/g, '') });
     },
 
     addProductFilesAction: (files: File[]) => {

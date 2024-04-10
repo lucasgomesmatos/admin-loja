@@ -1,4 +1,4 @@
-import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Home, Layers2, Library, ScanBarcode, Users } from "lucide-react";
 import { NavLink } from "./nav-link";
 
@@ -19,24 +19,30 @@ export const Drawer = ({ role }: DrawerProps) => {
       <nav className="flex flex-col mt-4">
         {role === "ADMIN" && (
           <>
-            <NavLink href="/dashboard/home">
-              <Home className="size-4" />
-              Home
-            </NavLink>
-            <NavLink href="/dashboard/users">
-              <Users className="size-4" />
-              Usuários
-            </NavLink>
-
-            <NavLink href="/dashboard/categories">
-              <Layers2 className="size-4" />
-              Categorias
-            </NavLink>
-
-            <NavLink href="/dashboard/products">
-              <ScanBarcode className="size-4" />
-              Produtos
-            </NavLink>
+            <SheetTrigger asChild>
+              <NavLink href="/dashboard/home">
+                <Home className="size-4" />
+                Home
+              </NavLink>
+            </SheetTrigger>
+            <SheetTrigger asChild>
+              <NavLink href="/dashboard/users">
+                <Users className="size-4" />
+                Usuários
+              </NavLink>
+            </SheetTrigger>
+            <SheetTrigger asChild>
+              <NavLink href="/dashboard/categories">
+                <Layers2 className="size-4" />
+                Categorias
+              </NavLink>
+            </SheetTrigger>
+            <SheetTrigger asChild>
+              <NavLink href="/dashboard/products">
+                <ScanBarcode className="size-4" />
+                Produtos
+              </NavLink>
+            </SheetTrigger>
           </>
         )}
         {role === "MEMBER" && (

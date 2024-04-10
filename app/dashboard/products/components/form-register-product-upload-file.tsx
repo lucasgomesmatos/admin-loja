@@ -1,5 +1,4 @@
 "use client";
-import { createProductAction } from "@/app/actions/products/create-product";
 import { ButtonLoading } from "@/components/button-loading";
 import DropzoneInput from "@/components/dropzone-input";
 import {
@@ -16,30 +15,32 @@ import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { useProductStore } from "../store/store";
 import {
-  appendFilesToFormData,
+  appendFormDataUploadFiles,
   isDisabledCreateProduct
 } from "../utils/products-utils";
 
 import { Button } from "@/components/ui/button";
 
+import { createProductAndUploadFilesAction } from "@/app/actions/products/create-product-and-upload-files";
 import { INITIAL_STATE_NOTIFICATION } from "@/utils/functions/constants";
 import { Category } from "@/utils/types/category";
 
-interface FormRegisterProductProps {
+interface FormRegisterProductUploadFilesProps {
   categories: Category[];
 }
 
-export default function FormRegisterProduct({
+export default function FormRegisterProductUploadFiles({
   categories,
-}: FormRegisterProductProps) {
+}: FormRegisterProductUploadFilesProps) {
 
   const {
     productId,
+    woocommerceId,
     productName,
     reset,
     productFiles,
     addProductNameValueAction,
-    addProductIdValueAction,
+    addProductWoocommerceIdValueAction,
     checkboxes,
     generateCheckboxes,
     addCheckboxAction,
@@ -47,7 +48,14 @@ export default function FormRegisterProduct({
   } = useProductStore();
 
   const [state, action] = useFormState(
-    createProductAction,
+    () => createProductAndUploadFilesAction(
+      {
+        name: productName!,
+        woocommerceId: Number(woocommerceId!),
+        productFiles,
+        categories: checkboxes,
+      }
+    ),
     INITIAL_STATE_NOTIFICATION
   );
 
@@ -70,19 +78,17 @@ export default function FormRegisterProduct({
     }
   }, [state, productId, reset]);
 
-  const onSubmit = async (data: FormData) => {
-    for (const file of productFiles) {
-      const formData = appendFilesToFormData(data, file, checkboxes);
-      await action(formData);
-    }
-  };
-
   const buttonDisabled = isDisabledCreateProduct({
     name: productName!,
-    id: productId!,
+    id: woocommerceId!,
     files: productFiles,
     checkboxes,
   })
+
+  const onSubmit = async (data: FormData) => {
+    const form = appendFormDataUploadFiles(data, productFiles, checkboxes);
+    console.log(Object.fromEntries(form.entries()));
+  };
 
   return (
     <form action={onSubmit} className="grid md:grid-cols-2 gap-8 max-w-[880px]">
@@ -108,8 +114,8 @@ export default function FormRegisterProduct({
               className="w-full bg-white shadow-none appearance-none pl-8  placeholder:text-sm"
               placeholder="ex: 1234"
               name="id"
-              value={productId || ""}
-              onChange={({ target }) => addProductIdValueAction(target.value)}
+              value={woocommerceId || ""}
+              onChange={({ target }) => addProductWoocommerceIdValueAction(target.value)}
               title="Digite números"
             />
           </div>

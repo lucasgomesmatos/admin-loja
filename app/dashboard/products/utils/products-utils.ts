@@ -114,3 +114,29 @@ export const generateCheckbox = ({
 };
 
 
+
+export const appendFormDataUploadFiles = (
+  data: FormData,
+  files: File[],
+  checkboxes: CheckboxesCategories[]
+) => {
+  const formData = new FormData();
+
+  const name = data.get("name") as string;
+  const idWoocommerce = data.get("id") as string;
+  const categories = checkboxes
+    ?.filter((checkbox) => checkbox.checked)
+    ?.map((checkbox) => checkbox.id)
+
+  formData.append("name", name);
+  formData.append("idWoocommerce", idWoocommerce);
+  formData.append("categories", JSON.stringify(categories));
+
+
+  files.forEach((file, index) => {
+    formData.append("files", file);
+  })
+
+
+  return formData;
+};
