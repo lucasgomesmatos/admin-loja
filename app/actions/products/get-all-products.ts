@@ -13,10 +13,16 @@ interface ProductsResponse {
 export async function fetchProducts(
   page = 1,
   query = "",
-  categories = ""
+  categories: string
 ): Promise<ProductsResponse> {
+
+  if (!categories) {
+    categories = "all"
+  }
+
   const response = await api(
-    `products?page=${page}&query=${query}&categories=${categories}`
+    `products?page=${page}&query=${query}&categories=${categories}`,
+
   );
 
   const { products, total } = await response.json();

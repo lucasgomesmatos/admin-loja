@@ -26,13 +26,19 @@ export const Pagination = <T extends unknown>({
   const { push } = useRouter();
   const pathname = usePathname();
   const search = useSearchParams().get("search");
+  const categories = useSearchParams().get("categories");
 
   const handlePaginationChange = (page: number) => {
+    const params = new URLSearchParams();
+
     if (search) {
-      push(`${pathname}?search=${search}&page=${page + 1}`);
-    } else {
-      push(`${pathname}?page=${page + 1}`);
+      params.set("search", search);
     }
+    if (categories) {
+      params.set("categories", categories);
+    }
+
+    push(`${pathname}?${params.toString()}&page=${page + 1}`)
   };
 
   const pages = Math.ceil(totalCount / perPage) || 1;
@@ -40,7 +46,7 @@ export const Pagination = <T extends unknown>({
   return (
     <>
       {result && (
-        <div className="mb-20">
+        <div className="mb-12">
           <div className="flex items-center justify-center md:justify-between">
             <span className="hidden text-sm text-muted-foreground md:flex">
               Total de {totalCount} item(s)

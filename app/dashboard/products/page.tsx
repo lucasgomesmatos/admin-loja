@@ -52,7 +52,7 @@ export default async function ProductPage({
             </Button>
           </Link>
         </div>
-        <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2">
+        <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2 ">
           {products?.map((product) => (
             <Card key={product.id}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -90,6 +90,7 @@ export default async function ProductPage({
             </Card>
           ))}
         </div>
+
         {!products?.length && <NoResults />}
         {Boolean(products?.length) && total > CONSTANTS.POR_PAGES_MAX_12 && (
           <Pagination
@@ -99,6 +100,7 @@ export default async function ProductPage({
             result={products}
           />
         )}
+
         <DialogDeleteProduct />
       </main>
     </>

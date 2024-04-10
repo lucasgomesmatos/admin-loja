@@ -25,74 +25,53 @@ interface SearchProductsProps {
 export const SearchProducts = ({ categories }: SearchProductsProps) => {
   const { push } = useRouter();
   const pathname = usePathname();
-  const search = useSearchParams();
-  const query = search.get("search");
-  const page = search.get("page");
+  const searchParams = useSearchParams();
+  const query = searchParams.get('search') ?? '';
 
-  const [text, setText] = useState(query ?? "");
+  const [text, setText] = useState(query);
   const filter = useDebounce(2000, text);
 
   const [checkboxes, setCheckboxes] = useState(
-    generateCheckbox({ categories })
+    generateCheckbox({ categories, checked: false })
   );
 
-  const handleAllCheckboxesChecked = () => {
-    const allCheckboxesChecked = checkboxes?.every(
-      (checkbox) => checkbox.checked
+  const handleOptionCheckboxes = useCallback((id: string) => {
+    setCheckboxes(prevCheckboxes =>
+      prevCheckboxes.map(checkbox =>
+        checkbox.id === id ? { ...checkbox, checked: !checkbox.checked } : checkbox
+      )
     );
+  }, []);
 
-    setCheckboxes(
-      checkboxes?.map((checkbox) => {
-        return {
-          ...checkbox,
-          checked: !allCheckboxesChecked,
-        };
-      })
-    );
-  };
-
-  const handleOptionCheckboxes = (id: string) => {
-    setCheckboxes(
-      checkboxes?.map((checkbox) => {
-        if (checkbox.id === id) {
-          return {
-            ...checkbox,
-            checked: !checkbox.checked,
-          };
-        }
-        return checkbox;
-      })
-    );
-  };
-
-  const allCheckboxes = checkboxes?.every((checkbox) => checkbox.checked);
-
-  const handleSearchAndPagination = useCallback(() => {
-    let path = pathname;
+  const generateSearchParams = useCallback(() => {
+    const params = new URLSearchParams();
 
     if (filter) {
-      path += `?search=${filter}`;
+      params.set('search', filter);
+      params.set('page', '1');
     }
 
-    if (page) {
-      path += `${filter ? "&" : "?"}page=${page}`;
+    const categoriesData = checkboxes
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.id)
+      .join(',');
+    if (categoriesData) {
+      params.set('categories', categoriesData);
+      params.set('page', '1');
     }
 
-    if (checkboxes) {
-      const categoriesData = checkboxes
-        .filter((checkbox) => checkbox.checked)
-        .map((checkbox) => checkbox.id)
-        .join(",");
+    return params;
+  }, [filter, checkboxes]);
 
-      path += `${filter || page ? "&" : "?"}categories=${categoriesData}`;
-    }
-
-    push(path);
-  }, [filter, page, pathname, push, checkboxes]);
+  const handleSearchAndPagination = useCallback(() => {
+    const params = generateSearchParams();
+    push(`${pathname}?${params.toString()}`);
+  }, [generateSearchParams, push, pathname]);
 
   useEffect(() => {
     handleSearchAndPagination();
   }, [handleSearchAndPagination]);
+
 
   return (
     <header className="flex w-full md:h-14   items-center gap-4 border-b  px-6 ">
@@ -127,17 +106,13 @@ export const SearchProducts = ({ categories }: SearchProductsProps) => {
                     Selecione alguma categoria
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem
-                    checked={allCheckboxes}
-                    onCheckedChange={handleAllCheckboxesChecked}
-                  >
-                    Todas
-                  </DropdownMenuCheckboxItem>
+
                   {checkboxes?.map((checkbox) => (
                     <DropdownMenuCheckboxItem
                       onCheckedChange={() =>
                         handleOptionCheckboxes(checkbox.id)
                       }
+
                       checked={checkbox.checked}
                       key={checkbox.id}
                     >

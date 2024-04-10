@@ -12,6 +12,7 @@ export function api(path: string, init?: RequestInit) {
   return fetch(url, {
     ...init,
     headers: {
+      "Content-Type": "application/json",
       ...init?.headers,
       Authorization: `Bearer ${token}`,
     },
