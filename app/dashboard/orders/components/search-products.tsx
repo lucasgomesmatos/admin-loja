@@ -11,28 +11,30 @@ export const SearchProductsOrders = () => {
   const pathname = usePathname();
   const search = useSearchParams();
   const query = search.get("search");
-  const page = search.get("page");
 
   const [text, setText] = useState(query ?? "");
   const filter = useDebounce(2000, text);
 
-  const handleSearchAndPagination = useCallback(() => {
-    let path = pathname;
+  const generateSearchParams = useCallback(() => {
+    const params = new URLSearchParams();
 
     if (filter) {
-      path += `?search=${filter}`;
+      params.set('search', filter);
+      params.set('page', '1');
     }
 
-    if (page) {
-      path += `${filter ? "&" : "?"}page=${page}`;
-    }
+    return params;
+  }, [filter]);
 
-    push(path);
-  }, [filter, page, pathname, push]);
+  const handleSearchAndPagination = useCallback(() => {
+    const params = generateSearchParams();
+    push(`${pathname}?${params.toString()}`);
+  }, [generateSearchParams, push, pathname]);
 
   useEffect(() => {
     handleSearchAndPagination();
   }, [handleSearchAndPagination]);
+
 
   return (
     <header className="flex w-full h-14  items-center gap-4 border-b px-6">
