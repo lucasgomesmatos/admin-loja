@@ -132,11 +132,17 @@ export const appendFormDataUploadFiles = (
   formData.append("idWoocommerce", idWoocommerce);
   formData.append("categories", JSON.stringify(categories));
 
+  const filesData = files.map((file, index) => {
+    formData.append(`file[${index}]`, file);
 
-  files.forEach((file, index) => {
-    formData.append("files", file);
+    return {
+      name: file.name,
+      contentType: file.type,
+    };
   })
 
+  formData.append("files", JSON.stringify(filesData));
+  formData.append("quantityFiles", files.length.toString());
 
   return formData;
 };

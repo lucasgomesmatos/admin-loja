@@ -139,6 +139,7 @@ export const useProductStore = create<ProductStoreState & ProductStoreActions>(
         productFiles: [],
         productFilesDelete: [],
         currentProductFiles: [],
+
       });
     },
 
@@ -146,6 +147,7 @@ export const useProductStore = create<ProductStoreState & ProductStoreActions>(
       set({
         productId: null,
         productName: null,
+        woocommerceId: null,
         productFiles: [],
         productFilesDelete: [],
         currentProductFiles: [],

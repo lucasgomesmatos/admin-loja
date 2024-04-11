@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label";
 import { ChevronDown, KeyRound, Type } from "lucide-react";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
-import { toast } from "sonner";
 import { useProductStore } from "../store/store";
 import {
   appendFormDataUploadFiles,
@@ -24,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { createProductAndUploadFilesAction } from "@/app/actions/products/create-product-and-upload-files";
 import { INITIAL_STATE_NOTIFICATION } from "@/utils/functions/constants";
 import { Category } from "@/utils/types/category";
+import { toast } from "sonner";
 
 interface FormRegisterProductUploadFilesProps {
   categories: Category[];
@@ -34,7 +34,6 @@ export default function FormRegisterProductUploadFiles({
 }: FormRegisterProductUploadFilesProps) {
 
   const {
-    productId,
     woocommerceId,
     productName,
     reset,
@@ -48,14 +47,7 @@ export default function FormRegisterProductUploadFiles({
   } = useProductStore();
 
   const [state, action] = useFormState(
-    () => createProductAndUploadFilesAction(
-      {
-        name: productName!,
-        woocommerceId: Number(woocommerceId!),
-        productFiles,
-        categories: checkboxes,
-      }
-    ),
+    createProductAndUploadFilesAction,
     INITIAL_STATE_NOTIFICATION
   );
 
@@ -71,12 +63,12 @@ export default function FormRegisterProductUploadFiles({
       toast.error(state.error);
       state.error = null
     }
-    if (state.ok && productId) {
+    if (state.ok && woocommerceId) {
       reset();
       toast.success(`Produto e arquivos registrados com sucesso.`);
       state.ok = false;
     }
-  }, [state, productId, reset]);
+  }, [state, woocommerceId, reset]);
 
   const buttonDisabled = isDisabledCreateProduct({
     name: productName!,
@@ -87,7 +79,7 @@ export default function FormRegisterProductUploadFiles({
 
   const onSubmit = async (data: FormData) => {
     const form = appendFormDataUploadFiles(data, productFiles, checkboxes);
-    console.log(Object.fromEntries(form.entries()));
+    await action(form);
   };
 
   return (

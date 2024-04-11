@@ -1,16 +1,10 @@
 "use server";
 
-import { CheckboxesCategories } from "@/app/dashboard/products/utils/products-utils";
-import { api } from "@/lib/fecth";
+import { environment } from "@/lib/env";
 import { apiError } from "@/utils/functions/api-error";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
-interface createProductAndUploadFilesActionProps {
-  name: string;
-  woocommerceId: number;
-  productFiles: File[];
-  categories: CheckboxesCategories[];
-}
 
 interface UploadProductResponse {
   name: string;
@@ -18,77 +12,81 @@ interface UploadProductResponse {
   signedUrl: string
 }
 
-function normalizeFiles(files: File[]) {
-  return files.map((file) => {
-    return {
-      name: file.name,
-      contentType: file.type
-    }
-  })
-}
 
-function normalizeCategories(categories: CheckboxesCategories[]) {
-  return categories?.filter((category) => category.checked)
-    ?.map((category) => category.id)
-}
-
-async function requestUploadFilesAws(data: UploadProductResponse[], files: File[]) {
-  const promises = data.map(async (item, index) => {
-    if (item.name === files[index].name) {
-      const response = await fetch(item.signedUrl, {
-        method: "PUT",
-        body: files[index]
-      })
-
-      if (!response.ok) {
-        throw new Error("Erro ao salvar arquivo no servidor");
-      }
-    } else {
-      throw new Error("Erro ao salvar arquivo no servidor");
-    }
-  })
-
-  await Promise.all(promises);
-
-}
-
-export async function createProductAndUploadFilesAction(
-  data: createProductAndUploadFilesActionProps
-) {
-  const { name, woocommerceId, productFiles, categories } = data;
-
-  const categoriesIds = normalizeCategories(categories);
-  const files = normalizeFiles(productFiles);
+export async function createProductAndUploadFilesAction(state: {}, formData: FormData) {
+  const token = cookies().get("session")?.value;
+  const { name, idWoocommerce, categories, files, uploadFiles } = extrairDadosFormData(formData);
 
   try {
-    const response = await api("/products", {
-      method: "POST",
-      body: JSON.stringify({
-        name,
-        idWoocommerce: woocommerceId,
-        categories: categoriesIds,
-        files
-      }),
-    })
+    const response = await fetch(
+      `${environment.NEXT_PUBLIC_API_BASE_URL}/products`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name,
+          idWoocommerce,
+          categories,
+          files
+        }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Erro ao salvar arquivo no servidor");
     }
 
-    const data = await response.json() as UploadProductResponse[]
-    console.log(data);
+    const data = await response.json() as UploadProductResponse[];
 
-    // await requestUploadFilesAws(data, productFiles);
+    await uploadFilesAws(data, uploadFiles);
 
     revalidatePath("/products");
 
     return {
       data: null,
       ok: true,
-      success: "Produto e arquivos registrados com sucesso",
       error: "",
     };
   } catch (error: unknown) {
     return apiError(error);
   }
+}
+
+function extrairDadosFormData(formData: FormData) {
+  const name = formData.get("name") as string;
+  const idWoocommerce = formData.get("idWoocommerce") as string;
+  const categories = JSON.parse(formData.get("categories") as string);
+  const files = JSON.parse(formData.get("files") as string);
+  const quantityFiles = Number(formData.get("quantityFiles"));
+
+  const uploadFiles: File[] = []
+
+  for (let i = 0; i < quantityFiles; i++) {
+    const file = formData.get(`file[${i}]`) as File;
+    uploadFiles.push(file);
+  }
+
+  return { name, idWoocommerce, categories, files, uploadFiles };
+}
+
+
+async function uploadFilesAws(data: UploadProductResponse[], files: File[]) {
+
+  const uploadPromises = data.map((item, index) => {
+    return fetch(item.signedUrl, {
+      method: "PUT",
+      headers: { "Content-Type": files[index].type },
+      body: files[index],
+    });
+  });
+
+  const responses = await Promise.all(uploadPromises);
+
+  responses.forEach(response => {
+    if (!response.ok) throw new Error("Erro ao salvar arquivo no AWS");
+  });
+
 }
