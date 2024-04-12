@@ -55,33 +55,6 @@ export const isDisabledUpdateProduct = (data: IsDisabledUpdateProductProps) => {
   return !Boolean(schema.safeParse(data).success && isLengthFiles)
 }
 
-export const appendFilesToFormData = (
-  data: FormData,
-  file: File,
-  checkboxes: CheckboxesCategories[]
-) => {
-  const formData = new FormData();
-
-  const nameProduct = data.get("name") as string;
-  const idWoocommerce = data.get("id") as string;
-  const categories = checkboxes
-    ?.filter((checkbox) => checkbox.checked)
-    ?.map((checkbox) => checkbox.id);
-
-  formData.append("nameProduct", nameProduct);
-  formData.append("idWoocommerce", idWoocommerce);
-  formData.append("contentType", file.type);
-  formData.append("nameFile", file.name);
-  formData.append("file", file);
-  formData.append("categories", JSON.stringify(categories));
-
-  return formData;
-};
-
-export const normalizeNumber = (value: string | undefined) => {
-  if (!value) return "";
-  return value.replace(/\D/g, "");
-};
 
 export const generateCheckbox = ({
   categories,
@@ -147,21 +120,24 @@ export const appendFormDataUploadFiles = (
   return formData;
 };
 
-
 export const appendFormDataUpdateUploadFiles = (
   data: FormData,
   files: File[],
   checkboxes: CheckboxesCategories[],
-  productFilesDelete: FileContent[]
+  productFilesDelete: FileContent[],
+  productId: string,
 ) => {
-  const formData = new FormData();
 
   const name = data.get("name") as string;
   const idWoocommerce = data.get("id") as string;
+
   const categories = checkboxes
     ?.filter((checkbox) => checkbox.checked)
     ?.map((checkbox) => checkbox.id)
 
+
+  const formData = new FormData();
+  formData.append("productId", productId);
   formData.append("name", name);
   formData.append("idWoocommerce", idWoocommerce);
   formData.append("categories", JSON.stringify(categories));

@@ -57,6 +57,7 @@ export default async function UpdatePage({
 
       <Suspense>
         <FormUpdateProduct
+          productId={params.id}
           files={files}
           categories={categories}
           categoriesChecked={categoriesProduct}

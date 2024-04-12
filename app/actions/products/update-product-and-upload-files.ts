@@ -15,24 +15,13 @@ interface UploadProductResponse {
 
 export async function updateProductAndUploadFilesAction(state: {}, formData: FormData) {
   const token = cookies().get("session")?.value;
-  const { name, idWoocommerce, categories, deleteFiles, files, uploadFiles } = extrairDadosFormData(formData);
-
-  if (1 === 1) {
-    console.log(deleteFiles);
-    console.log(categories);
-
-    return {
-      data: null,
-      ok: true,
-      error: "",
-    }
-  }
+  const { productId, name, idWoocommerce, categories, deleteFiles, files, uploadFiles } = extrairDadosFormData(formData);
 
   try {
     const response = await fetch(
-      `${environment.NEXT_PUBLIC_API_BASE_URL}/products`,
+      `${environment.NEXT_PUBLIC_API_BASE_URL}/products/${productId}`,
       {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -66,6 +55,7 @@ export async function updateProductAndUploadFilesAction(state: {}, formData: For
 }
 
 function extrairDadosFormData(formData: FormData) {
+  const productId = formData.get("productId") as string;
   const name = formData.get("name") as string;
   const idWoocommerce = formData.get("idWoocommerce") as string;
   const categories = JSON.parse(formData.get("categories") as string);
@@ -80,7 +70,7 @@ function extrairDadosFormData(formData: FormData) {
     uploadFiles.push(file);
   }
 
-  return { name, idWoocommerce, categories, deleteFiles, files, uploadFiles };
+  return { productId, name, idWoocommerce, categories, deleteFiles, files, uploadFiles };
 }
 
 async function uploadFilesAws(data: UploadProductResponse[], files: File[]) {

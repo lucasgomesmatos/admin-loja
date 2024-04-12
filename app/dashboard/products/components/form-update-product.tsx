@@ -1,6 +1,5 @@
 "use client";
 
-import { fetchDeleteFiles } from "@/app/actions/products/delete-files";
 import { ButtonLoading } from "@/components/button-loading";
 import DropzoneInput from "@/components/dropzone-input";
 import { Button } from "@/components/ui/button";
@@ -29,12 +28,14 @@ import {
 } from "../utils/products-utils";
 
 interface FormUpdateProductProps {
+  productId: string;
   files: FileContent[];
   categories: Category[];
   categoriesChecked: Category[];
 }
 
 export default function FormUpdateProduct({
+  productId,
   files,
   categories,
   categoriesChecked,
@@ -46,11 +47,11 @@ export default function FormUpdateProduct({
 
   const {
     productName,
-    productId,
+    woocommerceId,
     productFiles,
     setProductCurrentFilesAction,
     addProductNameValueAction,
-    addProductIdValueAction,
+    addProductWoocommerceIdValueAction,
     productFilesDelete,
     currentProductFiles,
     resetUpdate,
@@ -65,11 +66,6 @@ export default function FormUpdateProduct({
     INITIAL_STATE_NOTIFICATION
   );
 
-  const [stateUpdate, actionDelete] = useFormState(
-    () => fetchDeleteFiles(productFilesDelete),
-    INITIAL_STATE_NOTIFICATION
-  );
-
   useEffect(() => {
     resetOnLoad();
     generateCheckboxes(categories, false, categoriesChecked);
@@ -79,41 +75,29 @@ export default function FormUpdateProduct({
   useEffect(() => {
     setProductCurrentFilesAction(files);
     addProductNameValueAction(nameProduct!);
-    addProductIdValueAction(idWoocommerce!);
+    addProductWoocommerceIdValueAction(idWoocommerce!);
   }, [
     files,
     setProductCurrentFilesAction,
     addProductNameValueAction,
-    addProductIdValueAction,
+    addProductWoocommerceIdValueAction,
     nameProduct,
     idWoocommerce,
   ]);
 
-  useEffect(() => {
-    if (stateUpdate.error && stateUpdate.error.length) {
-      toast.error(stateUpdate.error);
-      stateUpdate.error = null;
-    }
-
-    if (stateUpdate.ok && productId) {
-      replace(`/dashboard/products`);
-      toast.success(`Arquivos atualizados com sucesso.`);
-      stateUpdate.ok = false;
-    }
-  }, [stateUpdate, productId, replace]);
 
   useEffect(() => {
     if (state.error && state.error.length) {
       state.error = null;
       toast.error(state.error);
     }
-    if (state.ok && productId) {
+    if (state.ok && woocommerceId) {
       resetUpdate();
       state.ok = false;
       replace(`/dashboard/products`);
-      toast.success(`Produto e arquivos registrados com sucesso.`);
+      toast.success(`Produto e arquivos atualizados com sucesso.`);
     }
-  }, [state, productId, resetUpdate, replace]);
+  }, [state, woocommerceId, resetUpdate, replace]);
 
 
   const buttonDisabled = isDisabledUpdateProduct({
@@ -125,7 +109,7 @@ export default function FormUpdateProduct({
   });
 
   const onSubmit = async (data: FormData) => {
-    const form = appendFormDataUpdateUploadFiles(data, productFiles, checkboxes, productFilesDelete);
+    const form = appendFormDataUpdateUploadFiles(data, productFiles, checkboxes, productFilesDelete, productId);
     await action(form);
   };
 
@@ -153,8 +137,8 @@ export default function FormUpdateProduct({
               className="w-full bg-white shadow-none appearance-none pl-8  placeholder:text-sm"
               placeholder="ex: 1234"
               name="id"
-              value={productId!}
-              onChange={({ target }) => addProductIdValueAction(target.value)}
+              value={woocommerceId!}
+              onChange={({ target }) => addProductWoocommerceIdValueAction(target.value)}
               title="Digite números"
             />
           </div>
