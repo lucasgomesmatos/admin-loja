@@ -11,6 +11,9 @@ export const metadata: Metadata = {
     template: '%s | Lojinha de Atividades',
     default: 'Lojinha de Atividades',
   },
+  icons: {
+    icon: '/icon.png',
+  }
 };
 
 export default function RootLayout({
