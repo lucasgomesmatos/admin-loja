@@ -113,13 +113,13 @@ export const useProductStore = create<ProductStoreState & ProductStoreActions>(
     },
 
     removeProductCurrentFileAction: (file: FileContent) => {
-      const { currentProductFiles } = get();
+      const { currentProductFiles, productFilesDelete } = get();
 
       const newFiles = currentProductFiles.filter(
         (item) => item.id !== file.id,
       );
 
-      set({ currentProductFiles: newFiles });
+      set({ currentProductFiles: newFiles, productFilesDelete: [...productFilesDelete, file] });
     },
 
 

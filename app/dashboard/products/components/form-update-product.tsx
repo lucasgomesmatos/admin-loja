@@ -1,5 +1,5 @@
 "use client";
-import { createProductAction } from "@/app/actions/products/create-product";
+
 import { fetchDeleteFiles } from "@/app/actions/products/delete-files";
 import { ButtonLoading } from "@/components/button-loading";
 import DropzoneInput from "@/components/dropzone-input";
@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import { updateProductAndUploadFilesAction } from "@/app/actions/products/update-product-and-upload-files";
 import { INITIAL_STATE_NOTIFICATION } from "@/utils/functions/constants";
 import { Category } from "@/utils/types/category";
 import { FileContent } from "@/utils/types/file-content";
@@ -23,7 +24,7 @@ import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { useProductStore } from "../store/store";
 import {
-  appendFilesToFormData,
+  appendFormDataUpdateUploadFiles,
   isDisabledUpdateProduct
 } from "../utils/products-utils";
 
@@ -60,7 +61,7 @@ export default function FormUpdateProduct({
   } = useProductStore();
 
   const [state, action] = useFormState(
-    createProductAction,
+    updateProductAndUploadFilesAction,
     INITIAL_STATE_NOTIFICATION
   );
 
@@ -124,18 +125,8 @@ export default function FormUpdateProduct({
   });
 
   const onSubmit = async (data: FormData) => {
-    // conserta o erro de não enviar os arquivos
-    console.log(currentProductFiles.length, productFiles, productFilesDelete)
-    if (currentProductFiles.length || productFiles.length) {
-      for (const file of productFiles) {
-        const formData = appendFilesToFormData(data, file, checkboxes);
-        await action(formData);
-      }
-    }
-
-    if (productFilesDelete.length) {
-      await actionDelete();
-    }
+    const form = appendFormDataUpdateUploadFiles(data, productFiles, checkboxes, productFilesDelete);
+    await action(form);
   };
 
   return (

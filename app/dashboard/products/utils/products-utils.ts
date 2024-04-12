@@ -146,3 +146,47 @@ export const appendFormDataUploadFiles = (
 
   return formData;
 };
+
+
+export const appendFormDataUpdateUploadFiles = (
+  data: FormData,
+  files: File[],
+  checkboxes: CheckboxesCategories[],
+  productFilesDelete: FileContent[]
+) => {
+  const formData = new FormData();
+
+  const name = data.get("name") as string;
+  const idWoocommerce = data.get("id") as string;
+  const categories = checkboxes
+    ?.filter((checkbox) => checkbox.checked)
+    ?.map((checkbox) => checkbox.id)
+
+  formData.append("name", name);
+  formData.append("idWoocommerce", idWoocommerce);
+  formData.append("categories", JSON.stringify(categories));
+
+  const filesData = files.map((file, index) => {
+    formData.append(`file[${index}]`, file);
+
+    return {
+      name: file.name,
+      contentType: file.type,
+    };
+  })
+
+  const filesDeleteData = productFilesDelete.map((file) => {
+    return {
+      id: file.id,
+      keyFile: file.keyFile,
+    }
+  })
+
+  formData.append("deleteFiles", JSON.stringify(filesDeleteData));
+
+  formData.append("files", JSON.stringify(filesData));
+  formData.append("quantityFiles", files.length.toString());
+
+  return formData;
+};
+

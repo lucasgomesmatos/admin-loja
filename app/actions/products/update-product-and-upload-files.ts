@@ -13,9 +13,20 @@ interface UploadProductResponse {
 }
 
 
-export async function createProductAndUploadFilesAction(state: {}, formData: FormData) {
+export async function updateProductAndUploadFilesAction(state: {}, formData: FormData) {
   const token = cookies().get("session")?.value;
-  const { name, idWoocommerce, categories, files, uploadFiles } = extrairDadosFormData(formData);
+  const { name, idWoocommerce, categories, deleteFiles, files, uploadFiles } = extrairDadosFormData(formData);
+
+  if (1 === 1) {
+    console.log(deleteFiles);
+    console.log(categories);
+
+    return {
+      data: null,
+      ok: true,
+      error: "",
+    }
+  }
 
   try {
     const response = await fetch(
@@ -30,7 +41,8 @@ export async function createProductAndUploadFilesAction(state: {}, formData: For
           name,
           idWoocommerce,
           categories,
-          files
+          files,
+          deleteFiles
         }),
       }
     );
@@ -59,6 +71,7 @@ function extrairDadosFormData(formData: FormData) {
   const categories = JSON.parse(formData.get("categories") as string);
   const files = JSON.parse(formData.get("files") as string);
   const quantityFiles = Number(formData.get("quantityFiles"));
+  const deleteFiles = JSON.parse(formData.get("deleteFiles") as string);
 
   const uploadFiles: File[] = []
 
@@ -67,9 +80,8 @@ function extrairDadosFormData(formData: FormData) {
     uploadFiles.push(file);
   }
 
-  return { name, idWoocommerce, categories, files, uploadFiles };
+  return { name, idWoocommerce, categories, deleteFiles, files, uploadFiles };
 }
-
 
 async function uploadFilesAws(data: UploadProductResponse[], files: File[]) {
 
