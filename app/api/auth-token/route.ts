@@ -1,3 +1,4 @@
+import { verifyToken } from "@/utils/functions/verify-token";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,23 +16,28 @@ export async function GET(request: NextRequest) {
 
   if (!token) redirect();
 
-  console.log("token", token);
+  const tokenValid = await verifyToken(token!);
 
-  const response = await fetch(urlApi, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  let refreshToken;
 
-  if (!response.ok) redirect();
+  if (!tokenValid) {
+    const response = await fetch(urlApi, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  const data = await response.json();
+    if (!response.ok) redirect();
 
-  console.log("data", data);
+    const data = await response.json();
+    refreshToken = data.refreshToken;
+  }
 
-  cookies().set("session", data.refreshToken, {
+  const session = tokenValid ? token : refreshToken;
+
+  cookies().set("session", session, {
     maxAge: 60 * 60 * 24 * 7,
     path: "/",
     httpOnly: true,
