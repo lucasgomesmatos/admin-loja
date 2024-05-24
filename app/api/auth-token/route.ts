@@ -15,6 +15,8 @@ export async function GET(request: NextRequest) {
 
   if (!token) redirect();
 
+  console.log("token", token);
+
   const response = await fetch(urlApi, {
     method: "PATCH",
     headers: {
@@ -26,6 +28,8 @@ export async function GET(request: NextRequest) {
   if (!response.ok) redirect();
 
   const data = await response.json();
+
+  console.log("data", data);
 
   cookies().set("session", data.refreshToken, {
     maxAge: 60 * 60 * 24 * 7,
