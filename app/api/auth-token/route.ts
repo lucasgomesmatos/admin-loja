@@ -1,28 +1,29 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
+const urlApi = new URL("https://api.profbiodicas.com.br/token/refresh");
+const urlRedirectLogin = new URL(
+  "https://admin.profbiodicas.com.br/auth/sign-in-member"
+);
+const urlRedirectOrders = new URL(
+  "https://admin.profbiodicas.com.br/dashboard/orders"
+);
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const token = searchParams.get("token");
 
-  if (!token) {
-    redirect();
-  }
+  if (!token) redirect();
 
-  const response = await fetch(
-    "https://api.profbiodicas.com.br/token/refresh",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await fetch(urlApi, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-  if (!response.ok) {
-    redirect();
-  }
+  if (!response.ok) redirect();
 
   const data = await response.json();
 
@@ -34,17 +35,9 @@ export async function GET(request: NextRequest) {
     sameSite: "lax",
   });
 
-  const redirectURL = new URL(
-    "https://admin.profbiodicas.com.br/dashboard/orders"
-  );
-
-  return NextResponse.redirect(redirectURL);
+  return NextResponse.redirect(urlRedirectOrders);
 }
 
 const redirect = () => {
-  const redirectURL = new URL(
-    "https://admin.profbiodicas.com.br/auth/sign-in-member"
-  );
-
-  return NextResponse.redirect(redirectURL);
+  return NextResponse.redirect(urlRedirectLogin);
 };
