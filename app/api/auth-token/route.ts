@@ -6,14 +6,27 @@ export async function GET(request: NextRequest) {
   const token = searchParams.get("token");
 
   if (!token) {
-    const redirectURL = new URL(
-      "https://admin.profbiodicas.com.br/auth/sign-in-member"
-    );
-
-    return NextResponse.redirect(redirectURL);
+    redirect();
   }
 
-  cookies().set("session", token, {
+  const response = await fetch(
+    "https://api.profbiodicas.com.br/token/refresh",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    redirect();
+  }
+
+  const data = await response.json();
+
+  cookies().set("session", data.refreshToken, {
     maxAge: 60 * 60 * 24 * 7,
     path: "/",
     httpOnly: true,
@@ -27,3 +40,11 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.redirect(redirectURL);
 }
+
+const redirect = () => {
+  const redirectURL = new URL(
+    "https://admin.profbiodicas.com.br/auth/sign-in-member"
+  );
+
+  return NextResponse.redirect(redirectURL);
+};

@@ -8,9 +8,6 @@ import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
-
-
-
 export default function GlobalError({
   error,
   reset,
