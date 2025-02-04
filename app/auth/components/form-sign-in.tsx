@@ -42,7 +42,7 @@ export const FormSignIn = () => {
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
-            data-error={Boolean(state.error.length)}
+            data-error={Boolean(state.error?.length)}
             className=" data-[error=true]:border-red-500"
             name="email"
             placeholder="admin@example.com"
@@ -56,7 +56,7 @@ export const FormSignIn = () => {
 
           <div className="relative">
             <Input
-              data-error={Boolean(state.error.length)}
+              data-error={Boolean(state.error?.length)}
               className=" data-[error=true]:border-red-500 appearance-none pr-8 "
               name="password"
               required

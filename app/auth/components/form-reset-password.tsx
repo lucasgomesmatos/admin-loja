@@ -36,7 +36,7 @@ export const FormResetPassword = () => {
   } = useResetPassword();
 
   useEffect(() => {
-    if (state.error.length) {
+    if (state.error?.length) {
       toast.error(state.error);
     }
 
